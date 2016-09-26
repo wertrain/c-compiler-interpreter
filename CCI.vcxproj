@@ -12,6 +12,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCI\Source\main.cpp" />
+    <ClCompile Include="CCI\Source\token.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CCI\Include\token.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C8F27B27-96BB-4D2C-8AD6-836AA6D37AD2}</ProjectGuid>
