@@ -69,7 +69,7 @@ void Initialize()
 int NextChar()
 {
     int c = 0;
-    if (c == EOF
+    //if (c == EOF
 }
 
 bool IsOperator(int c0, int c1)
