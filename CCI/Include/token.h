@@ -4,8 +4,8 @@
 namespace cci {
 namespace token {
 
-const int kIdSize = 32;
-const int kTokenTextSize = 128;
+static const int kTokenIdSize = 32;
+static const int kTokenTextSize = 128;
 
 /**
  * トークンの種類定義
@@ -31,9 +31,9 @@ enum Kind
     kIf,
     kElse,
     kPuts,
-    kIndent,
-    kIntValue,
-    kStringValue,
+    kId,
+    kIntNum,
+    kString,
     kLetter,
     kDigit,
     kNull,
@@ -64,12 +64,12 @@ struct Keyword
 /**
  * 初期化関数
  */
-void Initialize();
+void Initialize(const char* text);
 
 /**
  * 次のトークンの取得
  */
-Token GetNext();
+bool GetNext(Token& token);
 
 } // namespace token
 } // namespace cci
