@@ -1,5 +1,7 @@
 #include "../include/token.h"
 
+#include <cstring>
+
 namespace cci {
 namespace token {
 
@@ -62,6 +64,47 @@ void Initialize()
     char_type_table['\''] = kSingleQuote;
     char_type_table['"'] = kDoubleQuote;
     char_type_table[';'] = kSemicolon;
+}
+
+int NextChar()
+{
+    int c = 0;
+    if (c == EOF
+}
+
+bool IsOperator(int c0, int c1)
+{
+    char text[4];
+    text[0] = c0;
+    text[1] = c1;
+    text[2] = '\0';
+    return strstr(" <= >= == != ", text) != NULL;
+}
+
+bool SetKind(Token& token)
+{
+    char* text = token.text_;
+    for (int i = 0; keyword_table[i].kind_ != kSentinel; ++i)
+    {
+        if (strcmp(text, keyword_table[i].text_) == 0)
+        {
+            token.kind_ = keyword_table[i].kind_;
+            return true;
+        }
+    }
+    if (char_type_table[*text] == kLetter)
+    {
+        token.kind_ = kIndent;
+    }
+    else if (char_type_table[*text] == kDigit)
+    {
+        token.kind_ = kIntValue;
+    }
+    else
+    {
+        return false;
+    }
+    return true;
 }
 
 } // namespace token
