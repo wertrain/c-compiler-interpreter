@@ -12,6 +12,7 @@ static const int kEndOfText = (-1);
  * 分解対象のテキスト
  */
 static const char* target_text = nullptr;
+static int target_text_size = 0;
 static const char* target_text_current_char = nullptr;
 /**
  * 文字種類テーブル
@@ -44,9 +45,9 @@ Keyword keyword_table[] =
 
 int NextChar()
 {
-    if (target_text_current_char == nullptr)
+    if (target_text_current_char >= target_text + target_text_size)
     {
-        return 0;
+        return kEndOfText;
     }
 
     const int c = *target_text_current_char;
@@ -56,9 +57,9 @@ int NextChar()
 
 int PrevChar()
 {
-    if (target_text_current_char == nullptr)
+    if (target_text_current_char >= target_text + target_text_size)
     {
-        return 0;
+        return kEndOfText;
     }
 
     const int c = *target_text_current_char;
@@ -72,7 +73,7 @@ bool IsOperator(int c0, int c1)
     text[0] = c0;
     text[1] = c1;
     text[2] = '\0';
-    return strstr(" <= >= == != ", text) != NULL;
+    return strstr("<= >= == !=", text) != NULL;
 }
 
 bool SetKind(Token& token)
@@ -104,7 +105,7 @@ bool SetKind(Token& token)
 /**
  * トークン関連の初期化
  */
-void Initialize(const char* text)
+void Initialize(const char* text, const int text_size)
 {
     for (int i = 0; i < 256; ++i)
     {
@@ -137,6 +138,7 @@ void Initialize(const char* text)
     char_type_table[';'] = kSemicolon;
 
     target_text = target_text_current_char = text;
+    target_text_size = text_size;
 }
 
 /**
@@ -158,7 +160,7 @@ bool GetNext(Token& token)
     {
         ch = NextChar();
     }
-    if (ch == 0)
+    if (ch == kEndOfText)
     {
         token.kind_ = kEof;
         return true;
