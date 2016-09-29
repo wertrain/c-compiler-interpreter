@@ -57,9 +57,9 @@ int NextChar()
 
 int PrevChar()
 {
-    if (target_text_current_char >= target_text + target_text_size)
+    if (target_text_current_char < target_text)
     {
-        return kEndOfText;
+        return target_text[0];
     }
 
     const int c = *target_text_current_char;
@@ -177,7 +177,10 @@ bool GetNext(Token& token)
             }
             ch = NextChar();
         }
-        PrevChar();
+        if (ch != kEndOfText)
+        {
+            PrevChar();
+        }
         *token_text_pointer = '\0';
         break;
     case kDigit:
@@ -187,7 +190,10 @@ bool GetNext(Token& token)
             num = num * 10 + (ch - '0');
             ch = NextChar();
         }
-        PrevChar();
+        if (ch != kEndOfText)
+        {
+            PrevChar();
+        }
         token.kind_ = kIntNum;
         token.value_ = num;
         break;
@@ -198,12 +204,19 @@ bool GetNext(Token& token)
             if (++sq_count == 1)
             {
                 *token_text_pointer++ = token.value_ = ch;
+                ch = NextChar();
             }
             else
             {
                 return false;
             }
         }
+        *token_text_pointer = '\0';
+        if (ch != '\'')
+        {
+            return false;
+        }
+        token.kind_ = kIntNum;
         break;
     case kDoubleQuote:
         ch = NextChar();
@@ -212,16 +225,15 @@ bool GetNext(Token& token)
             if (token_text_pointer < token_text_pointer_text_max)
             {
                 *token_text_pointer++ = ch;
+                ch = NextChar();
             }
             else 
             {
                 return false;
             }
-            ch = NextChar();
         }
         *token_text_pointer = '\0';
-
-        if (ch == '"')
+        if (ch != '"')
         {
             return false;
         }
@@ -235,7 +247,10 @@ bool GetNext(Token& token)
             *token_text_pointer++ = ch;
             ch = NextChar();
         }
-        PrevChar();
+        if (ch != kEndOfText)
+        {
+            PrevChar();
+        }
         *token_text_pointer = '\0';
     }
     if (token.kind_ == kNull)

@@ -13,7 +13,11 @@ int main (int argc, char *argv[])
     }
 #endif
 
-    const char* sample_text = "if (dt <= size) dt = 100;";
+    const char* sample_text = {
+        "if (dt <= size) dt = 100;\
+        else dt = \'A\';\
+        puts(\"abcd\");"
+    };
     cci::token::Initialize(sample_text, strlen(sample_text));
     cci::token::Token token;
     while(cci::token::GetNext(token) && token.kind_ != cci::token::kEof) {
