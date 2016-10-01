@@ -1,27 +1,24 @@
 #include <iostream>
 #include <cstring>
-#include "../Include/token.h"
+
+#define ENABLED_TEST
+
+#ifdef ENABLED_TEST
+#include "../Include/test.h"
+#endif // ENABLED_TEST
 
 int main (int argc, char *argv[])
 {
-#if 0
+#ifndef ENABLED_TEST
     if (argc == 1)
     {
         std::cout << "usage: CCI [--code]" << std::endl;
         std::cout << "    --code    Show generated code" << std::endl;
         return 0;
     }
-#endif
+#else
+    cci::test::TestToken();
+#endif //ENABLED_TEST
 
-    const char* sample_text = {
-        "if (dt <= size) dt = 100;\
-        else dt = \'A\';\
-        puts(\"abcd\");"
-    };
-    cci::token::Initialize(sample_text, strlen(sample_text));
-    cci::token::Token token;
-    while(cci::token::GetNext(token) && token.kind_ != cci::token::kEof) {
-        std::cout << token.text_ << " " << token.kind_ << " " << token.value_ << std::endl;
-    }
     return 0;
 }
