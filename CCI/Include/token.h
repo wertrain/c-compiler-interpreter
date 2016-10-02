@@ -64,7 +64,7 @@ struct Keyword
 /**
  * ‰Šú‰»ŠÖ”
  */
-void Initialize(const char* text, const int text_size);
+void Initialize(const char* name, const char* text, const int text_size);
 
 /**
  * Ÿ‚Ìƒg[ƒNƒ“‚Ìæ“¾

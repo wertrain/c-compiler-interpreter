@@ -4,7 +4,7 @@
 namespace cci {
 namespace parser {
 
-int compile(const char* text, const int text_size);
+int compile(const char* name, const char* text, const int text_size);
 
 } // namespace parser
 } // namespace cci

@@ -2,6 +2,7 @@
 
 #include <cstring>
 #include <cctype>
+#include "../include/notice.h"
 
 namespace cci {
 namespace token {
@@ -14,10 +15,24 @@ static const int kEndOfText = (-1);
 static const char* target_text = nullptr;
 static int target_text_size = 0;
 static const char* target_text_current_char = nullptr;
+
+/**
+ * 分解位置
+ */
+static int current_line_count = 0;
+static int current_character_count = 0;
+
+/**
+ * ターゲット名
+ */
+const int kTargetNameSize = 256;
+static char target_name[kTargetNameSize];
+
 /**
  * 文字種類テーブル
  */
 static Kind char_type_table[256];
+
 
 /**
  * キーワードテーブル
@@ -52,6 +67,16 @@ int NextChar()
 
     const int c = *target_text_current_char;
     ++target_text_current_char;
+
+    if (c == '\n')
+    {
+        ++current_line_count;
+        current_character_count = 0;
+    }
+    else
+    {
+        ++current_character_count;
+    }
     return c;
 }
 
@@ -64,10 +89,20 @@ int PrevChar()
 
     const int c = *target_text_current_char;
     --target_text_current_char;
+
+    if (c == '\n')
+    {
+        --current_line_count;
+        current_character_count = 0;
+    }
+    else
+    {
+        --current_character_count;
+    }
     return c;
 }
 
-bool IsOperator(int c0, int c1)
+bool IsOperator2(int c0, int c1)
 {
     char text[4];
     text[0] = c0;
@@ -102,11 +137,21 @@ bool SetKind(Token& token)
     return true;
 }
 
+void Notice(const cci::notice::NoticeMessageId id)
+{
+    cci::notice::AddNotice(id, target_name, current_line_count, current_character_count);
+}
+
 /**
  * トークン関連の初期化
  */
-void Initialize(const char* text, const int text_size)
+void Initialize(const char* name, const char* text, const int text_size)
 {
+    current_line_count = 0;
+    current_character_count = 0;
+
+    strcpy_s(target_name, kTargetNameSize, name);
+
     for (int i = 0; i < 256; ++i)
     {
         char_type_table[i] = kOther;
@@ -208,12 +253,19 @@ bool GetNext(Token& token)
             }
             else
             {
+                // kErrorTooLongCharacterを二つ拾ってしまうので、改行か'まで文字を送ってしまう
+                while(ch != kEndOfText && ch != '\n' && ch != '\'')
+                {
+                    ch = NextChar();
+                }
+                Notice(cci::notice::kErrorTooLongCharacter);
                 return false;
             }
         }
         *token_text_pointer = '\0';
         if (ch != '\'')
         {
+            Notice(cci::notice::kErrorMissingSingleQuote);
             return false;
         }
         token.kind_ = kIntNum;
@@ -229,12 +281,14 @@ bool GetNext(Token& token)
             }
             else 
             {
+                Notice(cci::notice::kErrorInvalidString);
                 return false;
             }
         }
         *token_text_pointer = '\0';
         if (ch != '"')
         {
+            Notice(cci::notice::kErrorMissingDoubleQuote);
             return false;
         }
         token.kind_ = kString;
@@ -242,7 +296,7 @@ bool GetNext(Token& token)
     default:
         *token_text_pointer++ = ch;
         ch = NextChar();
-        if (IsOperator(*(token_text_pointer-1), ch))
+        if (IsOperator2(*(token_text_pointer-1), ch))
         {
             *token_text_pointer++ = ch;
             ch = NextChar();
@@ -259,6 +313,7 @@ bool GetNext(Token& token)
     }
     if (token.kind_ == kOther)
     {
+        Notice(cci::notice::kErrorUnknownCharacter);
         return false;
     }
     return true;
