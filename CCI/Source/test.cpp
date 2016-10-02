@@ -12,9 +12,9 @@ bool TestToken()
 {
     const char* sample_text = 
     {
-        "if (dt <= size) dt = 100;\
-        else dt = \'AB\';\
-        puts(\"abcd);"
+        "if (dt <= size) dt = 100;\n\
+        else dt = \'AB\';\n\
+        puts(\"abcd);\n"
     };
 
     cci::notice::Initialize();

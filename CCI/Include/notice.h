@@ -31,6 +31,7 @@ enum NoticeMessageId
     kErrorInvalidString,
     kErrorUnknownCharacter,
 };
+
 /**
  * エラー/警告メッセージ
  */
@@ -44,7 +45,9 @@ static const char* kNoticeMessageList[] =
     "不明な文字.",
 };
 
-
+/**
+ * 通知タイプ
+ */
 enum NoticeType
 {
     kError,
@@ -52,6 +55,9 @@ enum NoticeType
     kMax
 };
 
+/**
+ * 通知パラメータ
+ */
 struct NoticeParam
 {
     NoticeType type_;
@@ -70,7 +76,11 @@ bool Initialize();
  * 通知の追加
  */
 void AddNotice(const char* message, const char* filename, const int line, const int character);
-void AddNotice(const NoticeMessageId id, const char* filename, const int line, const int character);
+
+/**
+ * 通知の追加
+ */
+oid AddNotice(const NoticeMessageId id, const char* filename, const int line, const int character);
  
 /**
  * 通知の表示
