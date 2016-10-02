@@ -9,7 +9,8 @@ namespace test {
 
 bool TestToken()
 {
-    const char* sample_text = {
+    const char* sample_text = 
+    {
         "if (dt <= size) dt = 100;\
         else dt = \'A\';\
         puts(\"abcd\");"
@@ -17,7 +18,8 @@ bool TestToken()
 
     cci::token::Initialize(sample_text, strlen(sample_text));
     cci::token::Token token;
-    while(cci::token::GetNext(token) && token.kind_ != cci::token::kEof) {
+    while(cci::token::GetNext(token) && token.kind_ != cci::token::kEof)
+    {
         std::cout << token.text_ << " " << token.kind_ << " " << token.value_ << std::endl;
     }
 
