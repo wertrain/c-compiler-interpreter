@@ -18,6 +18,7 @@
     <ClCompile Include="CCI\Source\token.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CCI\Include\cci.h" />
     <ClInclude Include="CCI\Include\notice.h" />
     <ClInclude Include="CCI\Include\parser.h" />
     <ClInclude Include="CCI\Include\test.h" />
