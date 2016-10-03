@@ -10,7 +10,8 @@ namespace test {
 
 bool TestToken()
 {
-    const char* sample_text[] = 
+    const int sample_text_num = 2;
+    const char* sample_text[sample_text_num] = 
     {
         {
             "if (dt <= size) dt = 100;\n\
@@ -23,7 +24,7 @@ bool TestToken()
             puts(\"abcd);\n"
         }
     };
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < sample_text_num; ++i)
     {
         cci::notice::Initialize();
         cci::token::Initialize("sample_text", sample_text[i], strlen(sample_text[i]));
