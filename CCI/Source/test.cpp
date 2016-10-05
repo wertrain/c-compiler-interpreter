@@ -32,7 +32,7 @@ bool TestToken()
         cci::token::GetNext(token);
         
         std::cout << "========================" << std::endl;
-        std::cout << "Test:" << i << std::endl;
+        std::cout << "sample_text_" << i << ":" << std::endl;
         while (token.kind_ != cci::token::kEof)
         {
             std::cout << token.text_ << " " << token.kind_ << " " << token.value_ << std::endl;
@@ -46,7 +46,6 @@ bool TestToken()
         {
             std::cout << "no error." << std::endl;
         }
-        std::cout << "========================" << std::endl;
     }
 
     return true;
