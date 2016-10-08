@@ -14,6 +14,7 @@
     <ClCompile Include="CCI\Source\notice.cpp" />
     <ClCompile Include="CCI\Source\main.cpp" />
     <ClCompile Include="CCI\Source\parser.cpp" />
+    <ClCompile Include="CCI\Source\symbol.cpp" />
     <ClCompile Include="CCI\Source\test.cpp" />
     <ClCompile Include="CCI\Source\token.cpp" />
   </ItemGroup>
@@ -21,6 +22,7 @@
     <ClInclude Include="CCI\Include\cci.h" />
     <ClInclude Include="CCI\Include\notice.h" />
     <ClInclude Include="CCI\Include\parser.h" />
+    <ClInclude Include="CCI\Include\symbol.h" />
     <ClInclude Include="CCI\Include\test.h" />
     <ClInclude Include="CCI\Include\token.h" />
   </ItemGroup>
