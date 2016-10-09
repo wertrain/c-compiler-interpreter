@@ -4,6 +4,11 @@
 namespace cci {
 namespace symbol {
 
+/**
+ * シンボル格納最大数
+ */
+const int kMaxSymbol = 512;
+
 enum SymbolKind
 {
     kNumber = 0,
@@ -30,6 +35,8 @@ struct SymbolData
     char args_;         /** 関数の場合の引数個数 */
     int address_;       /** 変数のアドレス */
 };
+
+SymbolData* enter(const SymbolData *data, SymbolKind kind);
 
 } // namespace symbol
 } // namespace cci
