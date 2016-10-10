@@ -4,9 +4,33 @@
 #include <cstring>
 #include "../Include/token.h"
 #include "../Include/notice.h"
+#include "../Include/symbol.h"
 
 namespace cci {
 namespace test {
+
+bool TestSymbol()
+{
+    cci::symbol::Initialize();
+
+    const int sample_text_num = 6;
+    const char* sample_text[sample_text_num] = {
+        {"CBR250"},
+        {"CB250F"},
+        {"CB400SF"},
+        {"VTR250"},
+        {"aiueo"},
+        {"oeuia"}
+    };
+    for (int i = 0; i < sample_text_num; ++i)
+    {
+        cci::symbol::Enter(cci::symbol::CreateSymbolData(sample_text[i]), cci::symbol::kVar);
+    }
+
+    cci::symbol::Finalize();
+
+    return true;
+}
 
 bool TestToken()
 {

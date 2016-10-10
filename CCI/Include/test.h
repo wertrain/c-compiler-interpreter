@@ -4,6 +4,7 @@
 namespace cci {
 namespace test {
 
+bool TestSymbol();
 bool TestToken();
 
 } // namespace test

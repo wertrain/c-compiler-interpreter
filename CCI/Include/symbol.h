@@ -7,7 +7,7 @@ namespace symbol {
 /**
  * シンボル格納最大数
  */
-const int kMaxSymbol = 512;
+const int kMaxSymbol = 1024;
 
 enum SymbolKind
 {
@@ -36,7 +36,19 @@ struct SymbolData
     int address_;       /** 変数のアドレス */
 };
 
-SymbolData* enter(const SymbolData *data, SymbolKind kind);
+SymbolData* CreateSymbolData(const char* name);
+
+SymbolData* Enter(const SymbolData *data, SymbolKind kind);
+
+/**
+ * シンボル関連の初期化
+ */
+bool Initialize();
+
+/**
+ * シンボル関連の終了
+ */
+void Finalize();
 
 } // namespace symbol
 } // namespace cci
