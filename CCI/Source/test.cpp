@@ -13,16 +13,18 @@ bool TestSymbol()
 {
     cci::symbol::Initialize();
 
-    const int sample_text_num = 8;
+    const int sample_text_num = 10;
     const char* sample_text[sample_text_num] = {
-        {"CBR250"},
-        {"CB250F"},
-        {"CB400SF"},
-        {"VTR250"},
-        {"250CBR"},
-        {"250CBRF"},
-        {"250VTR"},
-        {"400CBSF"}
+        {"aiueo"},
+        {"oeiua"},
+        {"abcde"},
+        {"edcba"},
+        {"fghij"},
+        {"jihgf"},
+        {"qwerty"},
+        {"asdfgh"},
+        {"zxcvbn"},
+        {"123456"}
     };
     for (int i = 0; i < sample_text_num; ++i)
     {
