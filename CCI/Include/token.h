@@ -9,38 +9,43 @@ static const int kTokenTextSize = 128;
 
 /**
  * トークンの種類定義
+ * 一文字の種類については判定時に kind == '(' などでも判定可能にするために
+ * 対応した定数値を割り当てている
  */
-enum Kind
+enum TokenKind
 {
-    kLeftParenthesis,
-    kRightParenthesis,
-    kPlus,
-    kMinus,
-    kMultiplication,
-    kDivision,
-    kEqual,
-    kNotEqual,
-    kLess,
-    kLessEqual,
-    kGreat,
-    kGreatEqual,
-    kSingleQuote,
-    kDoubleQuote,
-    kAssignment,
-    kSemicolon,
-    kIf,
-    kElse,
-    kPuts,
-    kId,
-    kIntNum,
-    kString,
-    kLetter,
-    kDigit,
-    kNull,
-    kEof,
-    kOther,
-    kInt,
-    kVoid,
+    kNon,
+    kLeftParenthesis    = '(',
+    kRightParenthesis   = ')',
+    kPlus               = '+',
+    kMinus              = '-',
+    kMultiplication     = '*',
+    kDivision           = '/',
+    kModulo             = '%',
+    kSingleQuote        = '\'',
+    kDoubleQuote        = '"',
+    kAssignment         = '=',
+    kColon              = ':',
+    kSemicolon          = ';',
+    kSharp              = '#',
+    kComma              = ',',
+    kBackslash          = '\\',
+    kNot                = '!',
+    kLess               = '<',
+    kGreat              = '>',
+    kEqual,             // ==
+    kNotEqual,          // !=
+    kLessEqual,         // <=
+    kGreatEqual,        // >=
+    kIf,                // if
+    kElse,              // else
+    kPuts,              // puts
+    kInt,               // int
+    kVoid,              // void
+    kNull,              // NULL
+    kString,            // (文字列定数)
+    kId,                // (識別子)
+    kEof,               // (終端)
     kSentinel
 };
 
@@ -49,7 +54,7 @@ enum Kind
  */
 struct Token
 {
-    Kind kind_;
+    TokenKind kind_;
     char text_[kTokenTextSize];
     int value_;
 };
@@ -60,7 +65,7 @@ struct Token
 struct Keyword
 {
     char* text_;
-    Kind kind_;
+    TokenKind kind_;
 };
 
 /**

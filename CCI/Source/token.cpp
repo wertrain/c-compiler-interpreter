@@ -29,9 +29,33 @@ const int kTargetNameSize = 256;
 static char target_name[kTargetNameSize];
 
 /**
+ * •¶Žš‚ÌŽí—Þ
+ * Kind ‚Æ‚Ìˆá‚¢‚É’ˆÓ
+ */
+enum CharType
+{
+    kCharLetter,
+    kCharDigit,
+    kCharOther,
+    kCharLeftParenthesis,
+    kCharRightParenthesis,
+    kCharPlus,
+    kCharMinus,
+    kCharMultiplication,
+    kCharDivision,
+    kCharSingleQuote,
+    kCharDoubleQuote,
+    kCharAssignment,
+    kCharSemicolon,
+    kCharLess,
+    kCharGreat,
+    kCharMax
+};
+
+/**
  * •¶ŽšŽí—Þƒe[ƒuƒ‹
  */
-static Kind char_type_table[256];
+static CharType char_type_table[256];
 
 
 /**
@@ -41,6 +65,8 @@ Keyword keyword_table[] =
 {
     {"if", kIf},
     {"else", kElse},
+    {"int", kInt},
+    {"void", kVoid},
     {"(", kLeftParenthesis},
     {")", kRightParenthesis},
     {"+", kPlus},
@@ -55,6 +81,7 @@ Keyword keyword_table[] =
     {">=", kGreatEqual},
     {"=", kAssignment},
     {";", kSemicolon},
+    {":", kColon},
     {"", kSentinel},
 };
 
@@ -122,13 +149,13 @@ bool SetKind(Token& token)
             return true;
         }
     }
-    if (char_type_table[*text] == kLetter)
+    if (char_type_table[*text] == kCharLetter)
     {
         token.kind_ = kId;
     }
-    else if (char_type_table[*text] == kDigit)
+    else if (char_type_table[*text] == kCharDigit)
     {
-        token.kind_ = kIntNum;
+        token.kind_ = kInt;
     }
     else
     {
@@ -154,33 +181,33 @@ void Initialize(const char* name, const char* text, const int text_size)
 
     for (int i = 0; i < 256; ++i)
     {
-        char_type_table[i] = kOther;
+        char_type_table[i] = kCharOther;
     }
     for (int i = '0'; i <= '9'; ++i)
     {
-        char_type_table[i] = kDigit;
+        char_type_table[i] = kCharDigit;
     }
     for (int i = 'A'; i <= 'Z'; ++i)
     {
-        char_type_table[i] = kLetter;
+        char_type_table[i] = kCharLetter;
     }
     for (int i = 'a'; i <= 'z'; ++i)
     {
-        char_type_table[i] = kLetter;
+        char_type_table[i] = kCharLetter;
     }
-    char_type_table['_'] = kLetter;
-    char_type_table['='] = kAssignment;
-    char_type_table['('] = kLeftParenthesis;
-    char_type_table[')'] = kRightParenthesis;
-    char_type_table['<'] = kLess;
-    char_type_table['>'] = kGreat;
-    char_type_table['+'] = kPlus;
-    char_type_table['-'] = kMinus;
-    char_type_table['*'] = kMultiplication;
-    char_type_table['/'] = kDivision;
-    char_type_table['\''] = kSingleQuote;
-    char_type_table['"'] = kDoubleQuote;
-    char_type_table[';'] = kSemicolon;
+    char_type_table['_'] = kCharLetter;
+    char_type_table['='] = kCharAssignment;
+    char_type_table['('] = kCharLeftParenthesis;
+    char_type_table[')'] = kCharRightParenthesis;
+    char_type_table['<'] = kCharLess;
+    char_type_table['>'] = kCharGreat;
+    char_type_table['+'] = kCharPlus;
+    char_type_table['-'] = kCharMinus;
+    char_type_table['*'] = kCharMultiplication;
+    char_type_table['/'] = kCharDivision;
+    char_type_table['\''] = kCharSingleQuote;
+    char_type_table['"'] = kCharDoubleQuote;
+    char_type_table[';'] = kCharSemicolon;
 
     target_text = target_text_current_char = text;
     target_text_size = text_size;
@@ -199,7 +226,7 @@ void Finalize()
  */
 bool GetNext(Token& token)
 {
-    token.kind_ = kNull;
+    token.kind_ = kNon;
     memset(token.text_, '\0', sizeof(token.text_));
     token.value_ = 0;
 
@@ -221,8 +248,8 @@ bool GetNext(Token& token)
 
     switch (char_type_table[ch])
     {
-    case kLetter:
-        while (char_type_table[ch] == kLetter || char_type_table[ch] == kDigit)
+    case kCharLetter:
+        while (char_type_table[ch] == kCharLetter || char_type_table[ch] == kCharDigit)
         {
             if (token_text_pointer < token_text_pointer_id_max)
             {
@@ -236,9 +263,9 @@ bool GetNext(Token& token)
         }
         *token_text_pointer = '\0';
         break;
-    case kDigit:
+    case kCharDigit:
         num = 0;
-        while(char_type_table[ch] == kDigit)
+        while(char_type_table[ch] == kCharDigit)
         {
             num = num * 10 + (ch - '0');
             ch = NextChar();
@@ -247,10 +274,10 @@ bool GetNext(Token& token)
         {
             PrevChar();
         }
-        token.kind_ = kIntNum;
+        token.kind_ = kInt;
         token.value_ = num;
         break;
-    case kSingleQuote:
+    case kCharSingleQuote:
         ch = NextChar();
         while(ch != kEndOfText && ch != '\n' && ch != '\'')
         {
@@ -276,9 +303,9 @@ bool GetNext(Token& token)
             Notice(cci::notice::kErrorMissingSingleQuote);
             return false;
         }
-        token.kind_ = kIntNum;
+        token.kind_ = kInt;
         break;
-    case kDoubleQuote:
+    case kCharDoubleQuote:
         ch = NextChar();
         while(ch != kEndOfText && ch != '\n' && ch != '"')
         {
@@ -315,14 +342,13 @@ bool GetNext(Token& token)
         }
         *token_text_pointer = '\0';
     }
-    if (token.kind_ == kNull)
+    if (token.kind_ == kNon)
     {
-        SetKind(token);
-    }
-    if (token.kind_ == kOther)
-    {
-        Notice(cci::notice::kErrorUnknownCharacter);
-        return false;
+        if (!SetKind(token))
+        {
+            Notice(cci::notice::kErrorUnknownCharacter);
+            return false;
+        }
     }
     return true;
 }
