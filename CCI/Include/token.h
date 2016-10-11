@@ -45,6 +45,7 @@ enum TokenKind
     kNull,              // NULL
     kString,            // (•¶š—ñ’è”)
     kId,                // (¯•Êq)
+    kOther,             // (‚»‚Ì‘¼)
     kEof,               // (I’[)
     kSentinel
 };

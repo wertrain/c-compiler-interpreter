@@ -138,7 +138,7 @@ bool IsOperator2(int c0, int c1)
     return strstr("<= >= == !=", text) != NULL;
 }
 
-bool SetKind(Token& token)
+void SetKind(Token& token)
 {
     char* text = token.text_;
     for (int i = 0; keyword_table[i].kind_ != kSentinel; ++i)
@@ -146,7 +146,7 @@ bool SetKind(Token& token)
         if (strcmp(text, keyword_table[i].text_) == 0)
         {
             token.kind_ = keyword_table[i].kind_;
-            return true;
+            return;
         }
     }
     if (char_type_table[*text] == kCharLetter)
@@ -159,9 +159,9 @@ bool SetKind(Token& token)
     }
     else
     {
-        return false;
+        token.kind_ = kOther;
     }
-    return true;
+    return;
 }
 
 void Notice(const cci::notice::NoticeMessageId id)
@@ -344,11 +344,7 @@ bool GetNext(Token& token)
     }
     if (token.kind_ == kNon)
     {
-        if (!SetKind(token))
-        {
-            Notice(cci::notice::kErrorUnknownCharacter);
-            return false;
-        }
+        SetKind(token);
     }
     return true;
 }
