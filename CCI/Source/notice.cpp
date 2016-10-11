@@ -15,6 +15,11 @@ bool Initialize()
     return true;
 }
 
+void Finalize()
+{
+
+}
+
 void AddNotice(const char* message, const char* filename, const int line, const int character)
 {
     strcpy_s(notice_list[notice_count].message_, kNoticeMessageSize, message);

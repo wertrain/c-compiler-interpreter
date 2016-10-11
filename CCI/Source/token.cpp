@@ -187,6 +187,14 @@ void Initialize(const char* name, const char* text, const int text_size)
 }
 
 /**
+ * 終了関数
+ */
+void Finalize()
+{
+
+}
+
+/**
  * 次のトークンの取得
  */
 bool GetNext(Token& token)

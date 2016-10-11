@@ -73,6 +73,11 @@ struct NoticeParam
 bool Initialize();
 
 /**
+ * 通知関連の終了
+ */
+void Finalize();
+
+/**
  * 通知の追加
  */
 void AddNotice(const char* message, const char* filename, const int line, const int character);
