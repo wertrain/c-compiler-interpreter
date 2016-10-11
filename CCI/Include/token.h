@@ -39,6 +39,8 @@ enum Kind
     kNull,
     kEof,
     kOther,
+    kInt,
+    kVoid,
     kSentinel
 };
 
