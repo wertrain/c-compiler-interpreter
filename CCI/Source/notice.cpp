@@ -43,11 +43,11 @@ void PrintNotice()
 
     for (int i = 0; i < notice_count; ++i)
     {
-        if (notice_list[i].type_ == NoticeType::kError)
+        if (notice_list[i].type_ == kError)
         {
              std::cout << "Error: ";
         }
-        else if (notice_list[i].type_ == NoticeType::kWarning)
+        else if (notice_list[i].type_ == kWarning)
         {
              std::cout << "Warning: ";
         }
