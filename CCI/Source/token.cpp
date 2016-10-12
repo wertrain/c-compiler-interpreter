@@ -57,7 +57,6 @@ enum CharType
  */
 static CharType char_type_table[256];
 
-
 /**
  * キーワードテーブル
  */
@@ -151,7 +150,7 @@ void SetKind(Token& token)
     }
     if (char_type_table[*text] == kCharLetter)
     {
-        token.kind_ = kId;
+        token.kind_ = kIdentifier;
     }
     else if (char_type_table[*text] == kCharDigit)
     {
@@ -161,7 +160,6 @@ void SetKind(Token& token)
     {
         token.kind_ = kOther;
     }
-    return;
 }
 
 void Notice(const cci::notice::NoticeMessageId id)
@@ -169,9 +167,6 @@ void Notice(const cci::notice::NoticeMessageId id)
     cci::notice::AddNotice(id, target_name, current_line_count, current_character_count);
 }
 
-/**
- * トークン関連の初期化
- */
 void Initialize(const char* name, const char* text, const int text_size)
 {
     current_line_count = 0;
@@ -213,17 +208,11 @@ void Initialize(const char* name, const char* text, const int text_size)
     target_text_size = text_size;
 }
 
-/**
- * 終了関数
- */
 void Finalize()
 {
 
 }
 
-/**
- * 次のトークンの取得
- */
 bool GetNext(Token& token)
 {
     token.kind_ = kNon;
@@ -347,6 +336,21 @@ bool GetNext(Token& token)
         SetKind(token);
     }
     return true;
+}
+
+const char* GetCurrentName()
+{
+    return target_name;
+}
+
+int GetCurrentLineCount()
+{
+    return current_line_count;
+}
+
+int GetCurrentCharCount()
+{
+    return current_character_count;
 }
 
 } // namespace token

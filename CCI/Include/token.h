@@ -33,6 +33,8 @@ enum TokenKind
     kNot                = '!',
     kLess               = '<',
     kGreat              = '>',
+    kLeftBracket        = '[',
+    kRightBracket       = ']',
     kEqual,             // ==
     kNotEqual,          // !=
     kLessEqual,         // <=
@@ -44,7 +46,7 @@ enum TokenKind
     kVoid,              // void
     kNull,              // NULL
     kString,            // (文字列定数)
-    kId,                // (識別子)
+    kIdentifier,        // (識別子)
     kOther,             // (その他)
     kEof,               // (終端)
     kSentinel
@@ -83,6 +85,24 @@ void Finalize();
  * 次のトークンの取得
  */
 bool GetNext(Token& token);
+
+/**
+ * 現在処理中の名前を取得する
+ * @return 現在の名前
+ */
+const char* GetCurrentName();
+
+/**
+ * 現在処理中の行数を取得する
+ * @return 現在の行数
+ */
+int GetCurrentLineCount();
+
+/**
+ * 現在処理中の文字列数を取得する
+ * @return 現在の列数
+ */
+int GetCurrentCharCount();
 
 } // namespace token
 } // namespace cci

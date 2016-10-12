@@ -30,6 +30,9 @@ enum NoticeMessageId
     kErrorMissingDoubleQuote,
     kErrorInvalidString,
     kErrorUnknownCharacter,
+    kErrorNotFoundArrayIndex,
+    kErrorInvalidIdentifier,
+    kErrorUnknown
 };
  
 /**
@@ -43,6 +46,8 @@ static const char* kNoticeMessageList[] =
     "\"が見つからない.",
     "無効な文字列."
     "不明な文字.",
+    "配列の添え字が見つからない.",
+    "不明なエラー."
 };
 
 /**
