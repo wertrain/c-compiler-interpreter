@@ -66,7 +66,7 @@ bool TestToken()
             std::cout << token.text_ << " " << token.kind_ << " " << token.value_ << std::endl;
             cci::token::GetNext(token);
         }
-        if (cci::notice::GetNoticeCount() > 0)
+        if (cci::notice::GetNoticeAmountCount() > 0)
         {
             cci::notice::PrintNotice();
         }

@@ -103,9 +103,14 @@ void PrintNotice();
 void ClearNotice();
 
 /**
+ * タイプ別通知数の取得
+ */
+int GetNoticeCount(const NoticeType type);
+
+/**
  * 通知数の取得
  */
-int GetNoticeCount();
+int GetNoticeAmountCount();
 
 } // namespace notice
 } // namespace cci

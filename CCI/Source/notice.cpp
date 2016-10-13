@@ -56,10 +56,20 @@ void PrintNotice()
     }
 }
 
-/**
- * ’Ê’m”‚Ìæ“¾
- */
-int GetNoticeCount()
+int GetNoticeCount(const NoticeType type)
+{
+    int count = 0;
+    for (int i = 0; i < notice_count; ++i)
+    {
+        if (notice_list[i].type_ == type)
+        {
+             ++count;
+        }
+    }
+    return count;
+}
+
+int GetNoticeAmountCount()
 {
     return notice_count;
 }
