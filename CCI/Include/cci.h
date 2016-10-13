@@ -1,10 +1,8 @@
-#ifndef CCI_CODE_H_
-#define CCI_CODE_H_
+#ifndef CCI_COMMON_H_
+#define CCI_COMMON_H_
 
 namespace cci {
-namespace code {
 
-} // namespace code
 } // namespace cci
 
-#endif // CCI_CODE_H_
+#endif // CCI_COMMON_H_

@@ -1,12 +1,10 @@
-#ifndef CCI_PARSER_H_
-#define CCI_PARSER_H_
+#ifndef CCI_CODE_H_
+#define CCI_CODE_H_
 
 namespace cci {
-namespace parser {
+namespace code {
 
-int compile(const char* name, const char* text, const int text_size);
-
-} // namespace parser
+} // namespace code
 } // namespace cci
 
-#endif // CCI_PARSER_H_
+#endif // CCI_CODE_H_

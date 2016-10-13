@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CCI\Source\code.cpp" />
     <ClCompile Include="CCI\Source\notice.cpp" />
     <ClCompile Include="CCI\Source\main.cpp" />
     <ClCompile Include="CCI\Source\parser.cpp" />
@@ -20,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCI\Include\cci.h" />
+    <ClInclude Include="CCI\Include\code.h" />
     <ClInclude Include="CCI\Include\notice.h" />
     <ClInclude Include="CCI\Include\parser.h" />
     <ClInclude Include="CCI\Include\symbol.h" />
