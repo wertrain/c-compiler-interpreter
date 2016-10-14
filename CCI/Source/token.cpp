@@ -154,7 +154,7 @@ void SetKind(Token& token)
     }
     else if (char_type_table[*text] == kCharDigit)
     {
-        token.kind_ = kInt;
+        token.kind_ = kIntNum;
     }
     else
     {
@@ -292,7 +292,7 @@ bool GetNext(Token& token)
             Notice(cci::notice::kErrorMissingSingleQuote);
             return false;
         }
-        token.kind_ = kInt;
+        token.kind_ = kIntNum;
         break;
     case kCharDoubleQuote:
         ch = NextChar();

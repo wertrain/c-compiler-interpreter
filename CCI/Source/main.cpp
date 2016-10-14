@@ -17,7 +17,8 @@ int main (int argc, char *argv[])
         return 0;
     }
 #else
-    cci::test::TestSymbol();
+    cci::test::TestParser();
+    //cci::test::TestSymbol();
     //cci::test::TestToken();
 #endif //ENABLED_TEST
 

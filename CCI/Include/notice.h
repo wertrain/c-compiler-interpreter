@@ -47,6 +47,7 @@ static const char* kNoticeMessageList[] =
     "無効な文字列."
     "不明な文字.",
     "配列の添え字が見つからない.",
+    "無効な識別子.",
     "不明なエラー."
 };
 

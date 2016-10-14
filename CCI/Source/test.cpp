@@ -5,6 +5,7 @@
 #include "../Include/token.h"
 #include "../Include/notice.h"
 #include "../Include/symbol.h"
+#include "../Include/parser.h"
 
 namespace cci {
 namespace test {
@@ -76,6 +77,27 @@ bool TestToken()
         }
     }
 
+    return true;
+}
+
+bool TestParser()
+{
+    const int sample_text_num = 2;
+    const char* sample_text[sample_text_num] = 
+    {
+        {
+            "int dt;\n\
+            dt = 100;\n"
+        },
+        {
+            "int func();\n\
+            func();\n"
+        }
+    };
+    for (int i = 0; i < sample_text_num; ++i)
+    {
+        cci::parser::compile("sample_text", sample_text[i], strlen(sample_text[i]));
+    }
     return true;
 }
 

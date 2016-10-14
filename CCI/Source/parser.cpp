@@ -21,7 +21,7 @@ bool GetNextToken(cci::token::Token &token)
 void DefineVarOrFunction(cci::token::Token &token, cci::symbol::DataType type)
 {
     // 識別子かチェック
-    if (token.kind_ != cci::token::kIdentifier)
+    if (GetNextToken(token) && token.kind_ != cci::token::kIdentifier)
     {
         Notice(cci::notice::kErrorInvalidIdentifier);
         return;

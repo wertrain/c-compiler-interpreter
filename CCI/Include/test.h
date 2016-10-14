@@ -6,6 +6,7 @@ namespace test {
 
 bool TestSymbol();
 bool TestToken();
+bool TestParser();
 
 } // namespace test
 } // namespace cci
