@@ -45,6 +45,7 @@ enum TokenKind
     kInt,               // int
     kVoid,              // void
     kNull,              // NULL
+    kIntNum,            // (”’l’è”)
     kString,            // (•¶š—ñ’è”)
     kIdentifier,        // (¯•Êq)
     kOther,             // (‚»‚Ì‘¼)
