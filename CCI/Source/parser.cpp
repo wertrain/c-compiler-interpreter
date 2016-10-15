@@ -39,7 +39,8 @@ void DefineVarOrFunction(cci::token::Token &token, cci::symbol::DataType type)
     // 次のトークンが ( なら関数宣言
     if (token.kind_ == '(') // '(' == cci::token::kLeftParenthesis
     {
-        cci::symbol::Enter(tmpSymbolData, cci::symbol::kFunction);
+        tmpSymbolData->kind_ = cci::symbol::kFunction;
+        cci::symbol::Enter(tmpSymbolData);
     }
     // それ以外では変数宣言
     else
@@ -64,7 +65,8 @@ void DefineVarOrFunction(cci::token::Token &token, cci::symbol::DataType type)
             }
             // ここから未実装
         }
-        cci::symbol::Enter(tmpSymbolData, cci::symbol::kVar);
+        tmpSymbolData->kind_ = cci::symbol::kVar;
+        cci::symbol::Enter(tmpSymbolData);
     }
 }
 

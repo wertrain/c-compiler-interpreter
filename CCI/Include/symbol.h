@@ -38,7 +38,7 @@ struct SymbolData
 
 SymbolData* CreateSymbolData(const char* name);
 
-SymbolData* Enter(const SymbolData *data, SymbolKind kind);
+bool Enter(const SymbolData *data);
 
 /**
  * ƒVƒ“ƒ{ƒ‹ŠÖ˜A‚Ì‰Šú‰»

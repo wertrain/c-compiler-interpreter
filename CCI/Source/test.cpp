@@ -29,7 +29,7 @@ bool TestSymbol()
     };
     for (int i = 0; i < sample_text_num; ++i)
     {
-        cci::symbol::Enter(cci::symbol::CreateSymbolData(sample_text[i]), cci::symbol::kVar);
+        cci::symbol::Enter(cci::symbol::CreateSymbolData(sample_text[i]));
     }
 
     cci::symbol::Finalize();
@@ -96,6 +96,8 @@ bool TestParser()
     };
     for (int i = 0; i < sample_text_num; ++i)
     {
+        std::cout << "========================" << std::endl;
+        std::cout << "sample_text_" << i << ":" << std::endl;
         cci::parser::compile("sample_text", sample_text[i], strlen(sample_text[i]));
     }
     return true;

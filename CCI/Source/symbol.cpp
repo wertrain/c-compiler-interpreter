@@ -113,6 +113,14 @@ void Finalize()
         SymbolDataLinkItem* p = hash_table[i];
         while(p != nullptr)
         {
+            if (p->data_->kind_ == kVar)
+            {
+                std::cout << "Var - ";
+            }
+            else 
+            {
+                std::cout << "Function - ";
+            }
             std::cout << i << ": " << p->data_->name_ << std::endl;
             p = p->next_;
         }
@@ -147,10 +155,9 @@ SymbolData* CreateSymbolData(const char* name)
     return p;
 }
 
-SymbolData* Enter(const SymbolData *data, SymbolKind kind)
+bool Enter(const SymbolData *data)
 {
-    EntryHashTable(data);
-    return nullptr;
+    return EntryHashTable(data);
 }
 
 } // namespace symbol
