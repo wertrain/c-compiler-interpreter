@@ -33,13 +33,13 @@ void ResetInner()
     }
 }
 
-int GetHashKey(const cci::symbol::SymbolData *data)
+int GetHashKey(const char *name)
 {
-    const int length = strlen(data->name_);
+    const int length = strlen(name);
     int sum = 0;
     for (int i = 0; i < length; ++i)
     {
-        sum += data->name_[i];
+        sum += name[i];
     }
     return sum % kHashTableSize;
 }
@@ -54,7 +54,7 @@ bool EntryHashTable(const cci::symbol::SymbolData *src)
     SymbolDataLinkItem *item = &link_data_array[link_data_array_index];
     ++link_data_array_index;
 
-    const int index = GetHashKey(src);
+    const int index = GetHashKey(src->name_);
     SymbolDataLinkItem* current = hash_table[index];
     SymbolDataLinkItem* prev = nullptr;
     if (current == nullptr)
@@ -158,6 +158,30 @@ SymbolData* CreateSymbolData(const char* name)
 bool Enter(const SymbolData *data)
 {
     return EntryHashTable(data);
+}
+
+const SymbolData* SearchSymbolByName(const char* name)
+{
+    const int index = GetHashKey(name);
+    SymbolDataLinkItem* current = hash_table[index];
+    SymbolDataLinkItem* prev = nullptr;
+    if (current == nullptr)
+    {
+        return nullptr;
+    }
+    else
+    {
+        while (current != nullptr)
+        {
+            prev = current;
+            if (std::strcmp(current->data_->name_, name) == 0)
+            {
+                return current->data_;
+            }
+            current = current->next_;
+        }
+    }
+    return nullptr;
 }
 
 } // namespace symbol

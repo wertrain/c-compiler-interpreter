@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <cassert>
 #include "../Include/token.h"
 #include "../Include/notice.h"
 #include "../Include/symbol.h"
@@ -9,6 +10,25 @@
 
 namespace cci {
 namespace test {
+
+void Test(const bool test, const long line, const char* file)
+{
+    if (!test)
+    {
+        std::cout << "Test Failed!"
+                  << " Line: " << line
+                  << " File: " << file
+                  << std::endl;
+        assert(test);
+    }
+    else
+    {
+        std::cout << "Test Succeeded!"
+                  << " Line: " << line
+                  << " File: " << file
+                  << std::endl;
+    }
+}
 
 bool TestSymbol()
 {
@@ -31,6 +51,10 @@ bool TestSymbol()
     {
         cci::symbol::Enter(cci::symbol::CreateSymbolData(sample_text[i]));
     }
+
+    Test(nullptr != cci::symbol::SearchSymbolByName(sample_text[0]), __LINE__, __FILE__);
+    Test(nullptr != cci::symbol::SearchSymbolByName(sample_text[1]), __LINE__, __FILE__);
+    Test(nullptr == cci::symbol::SearchSymbolByName("notfoundtest"), __LINE__, __FILE__);
 
     cci::symbol::Finalize();
 

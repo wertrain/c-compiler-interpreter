@@ -50,6 +50,13 @@ bool Initialize();
  */
 void Finalize();
 
+/**
+ * シンボルを検索する
+ * @param name 検索する名前
+ * @return 見つかったシンボル、見つからなければ nullptr を返す
+ */
+const SymbolData* SearchSymbolByName(const char* name);
+
 } // namespace symbol
 } // namespace cci
 
