@@ -18,7 +18,7 @@ enum SymbolKind
     kParam
 };
 
-enum DataType
+enum SymbolDataType
 {
     kNon = 0,
     kVoid,
@@ -29,7 +29,7 @@ struct SymbolData
 {
     char* name_;        /** 変数や関数の名前 */
     SymbolKind kind_;   /** 種類 */
-    DataType dataType_; /** タイプ */
+    SymbolDataType dataType_; /** タイプ */
     int arrayLength_;   /** 配列長, 0 なら単純変数 */
     char level_;        /** 記憶領域, グローバルなら0, ローカルなら1 */
     char args_;         /** 関数の場合の引数個数 */

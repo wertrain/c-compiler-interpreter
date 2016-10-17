@@ -55,6 +55,7 @@ bool TestSymbol()
     Test(nullptr != cci::symbol::SearchSymbolByName(sample_text[0]), __LINE__, __FILE__);
     Test(nullptr != cci::symbol::SearchSymbolByName(sample_text[1]), __LINE__, __FILE__);
     Test(nullptr == cci::symbol::SearchSymbolByName("notfoundtest"), __LINE__, __FILE__);
+    Test(nullptr == cci::symbol::SearchSymbolByName("abcdefghijk"), __LINE__, __FILE__);
 
     cci::symbol::Finalize();
 

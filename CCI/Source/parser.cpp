@@ -18,7 +18,7 @@ bool GetNextToken(cci::token::Token &token)
     return (cci::token::GetNext(token) && token.kind_ != cci::token::kEof);
 }
 
-void DefineVarOrFunction(cci::token::Token &token, cci::symbol::DataType type)
+void DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType type)
 {
     // 識別子かチェック
     if (GetNextToken(token) && token.kind_ != cci::token::kIdentifier)
@@ -85,7 +85,7 @@ int compile(const char* name, const char* text, const int text_size)
 
     while(cci::token::GetNext(token) && token.kind_ != cci::token::kEof)
     {
-        cci::symbol::DataType tmpSymbolDataType = cci::symbol::kNon;
+        cci::symbol::SymbolDataType tmpSymbolDataType = cci::symbol::kNon;
 
         switch (token.kind_)
         {
