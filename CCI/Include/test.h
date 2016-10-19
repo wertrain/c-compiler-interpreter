@@ -9,6 +9,7 @@ void Test(const bool test, const long line, const char* file);
 bool TestSymbol();
 bool TestToken();
 bool TestParser();
+bool TestCode();
 
 } // namespace test
 } // namespace cci

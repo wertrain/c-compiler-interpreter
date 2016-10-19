@@ -7,6 +7,7 @@
 #include "../Include/notice.h"
 #include "../Include/symbol.h"
 #include "../Include/parser.h"
+#include "../Include/code.h"
 
 namespace cci {
 namespace test {
@@ -125,6 +126,13 @@ bool TestParser()
         std::cout << "sample_text_" << i << ":" << std::endl;
         cci::parser::compile("sample_text", sample_text[i], strlen(sample_text[i]));
     }
+    return true;
+}
+
+bool TestCode()
+{
+    cci::code::GenerateCode3(cci::code::Nop, 0, 0);
+
     return true;
 }
 
