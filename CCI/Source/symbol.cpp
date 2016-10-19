@@ -13,7 +13,7 @@ struct SymbolDataLinkItem
     SymbolDataLinkItem* prev_;
 };
 
-const int kHashTableSize = 53;
+const int kHashTableSize = 53; // 分母となる値を素数にするとハッシュ値の偏りが少なくなる
 SymbolDataLinkItem* hash_table[kHashTableSize];
 SymbolDataLinkItem link_data_array[cci::symbol::kMaxSymbol];
 static int link_data_array_index = 0;
