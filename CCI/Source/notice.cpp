@@ -9,6 +9,11 @@ namespace notice {
 static NoticeParam notice_list[kMaxNotice];
 static int notice_count = 0;
 
+/**
+ * ì‡ïîÉGÉâÅ[ï∂éöóÒ
+ */
+const char* kInternalErrorName = "Error Internal";
+
 bool Initialize()
 {
     notice_count = 0;
@@ -32,6 +37,11 @@ void AddNotice(const char* message, const char* filename, const int line, const 
 void AddNotice(const NoticeMessageId id, const char* filename, const int line, const int character)
 {
     AddNotice(kNoticeMessageList[id], filename, line, character);
+}
+
+void AddNotice(const NoticeMessageId id)
+{
+    AddNotice(kNoticeMessageList[id], "", 0, 0);
 }
 
 void PrintNotice()

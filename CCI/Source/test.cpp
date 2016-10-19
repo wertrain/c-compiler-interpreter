@@ -131,7 +131,9 @@ bool TestParser()
 
 bool TestCode()
 {
-    cci::code::GenerateCode3(cci::code::Nop, 0, 0);
+    cci::code::Initialize();
+    cci::code::GenerateCode3(cci::code::kNop, 0, 0);
+    cci::code::Finalize();
 
     return true;
 }

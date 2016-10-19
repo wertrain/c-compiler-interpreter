@@ -7,24 +7,55 @@ namespace code {
 /**
  * コード格納最大数
  */
-const int kMaxCodeSize = 1024 * 4;
+const int kMaxCodeSize = 1024 * 16;
+
+/**
+ * エラー定数
+ */
+const int kError = -1;
 
 /**
  * 処理コード
  */
 enum OparationCode
 {
-    Nop,
-    Stop
+    kNop,
+    kStop
 };
+
+/**
+ * コード関連の初期化
+ */
+bool Initialize();
+
+/**
+ * コード関連の終了
+ */
+void Finalize();
 
 /**
  * コードを生成する
  * @param op_code 処理コード
  * @param flag フラグ
  * @param data データ
+ * @return 現在のコード数、追加できなければ cci::code::kError を返す
  */
-int GenerateCode3(const OparationCode op_code, const int flag, const int data);
+int GenerateCode3(const OparationCode opcode, const int flag, const int data);
+
+/**
+ * コードを生成する
+ * @param op_code 処理コード
+ * @param flag フラグ
+ * @return 現在のコード数、追加できなければ cci::code::kError を返す
+ */
+int GenerateCode2(const OparationCode opcode, const int flag);
+
+/**
+ * コードを生成する
+ * @param op_code 処理コード
+ * @return 現在のコード数、追加できなければ cci::code::kError を返す
+ */
+int GenerateCode1(const OparationCode opcode);
 
 } // namespace code
 } // namespace cci

@@ -1,21 +1,81 @@
 #include "../include/code.h"
 
-#include <iostream>
+#include "../include/notice.h"
+
+namespace
+{
+
+/**
+ * ƒR[ƒhŠi”[•”•ª (16 byte)
+ */
+struct CodeData
+{
+    cci::code::OparationCode opcode_;
+    int flag_;
+    int data_;
+    int reserved_;
+};
+
+static CodeData codedata_array[cci::code::kMaxCodeSize];
+static int codedata_count = 0;
+
+void ResetInner()
+{
+    codedata_count = 0;
+    for (int i = 0; i < cci::code::kMaxCodeSize; ++i)
+    {
+        codedata_array[i].opcode_ = cci::code::kNop;
+        codedata_array[i].flag_ = 0;
+        codedata_array[i].data_ = 0;
+        codedata_array[i].reserved_ = 0;
+    }
+}
+
+int GenerateCode(const cci::code::OparationCode opcode, const int flag, const int data)
+{
+    if (codedata_count <= cci::code::kMaxCodeSize)
+    {
+        cci::notice::AddNotice(cci::notice::kInternalErrorOverflowCodeData);
+        return cci::code::kError;
+    }
+
+    codedata_array[codedata_count].opcode_ = opcode;
+    codedata_array[codedata_count].flag_ = flag;
+    codedata_array[codedata_count].data_ = data;
+    ++codedata_count;
+
+    return codedata_count;
+}
+
+} // namespace
 
 namespace cci {
 namespace code {
 
-struct CodeData
+bool Initialize()
 {
-    OparationCode opcode_;
-    int flag_;
-    int data_;
-};
+    ResetInner();
+    return true;
+}
 
-int GenerateCode3(const OparationCode op_code, const int flag, const int data)
+void Finalize()
 {
-    std::cout << sizeof(CodeData) << std::endl;
-    return 0;
+
+}
+
+int GenerateCode3(const OparationCode opcode, const int flag, const int data)
+{
+    return GenerateCode(opcode, flag, data);
+}
+
+int GenerateCode2(const OparationCode opcode, const int flag)
+{
+    return GenerateCode(opcode, flag, 0);
+}
+
+int GenerateCode1(const OparationCode opcode)
+{
+    return GenerateCode(opcode, 0, 0);
 }
 
 } // namespace code
