@@ -19,8 +19,9 @@ const int kError = -1;
  */
 enum OparationCode
 {
-    kNop,
-    kStop
+    kNop, kInc, kDec, kNeg, kNot, kAdd, kSub, kMul, kDiv, kMod, kLess, kLseq, 
+    kGrt, kGteq, kEqu, kNteq, kAnd, kOr, kCall, kDel, kJmp, kJpt, kJpf, kEqcmp,
+    kLod, kLda, kLdi, kSto, kAdbr, kRet, kAss, kAssv, kVal, kLib, kStop
 };
 
 /**
