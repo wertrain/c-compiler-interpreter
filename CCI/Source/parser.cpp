@@ -4,6 +4,7 @@
 #include "../include/token.h"
 #include "../include/notice.h"
 #include "../include/symbol.h"
+#include "../include/code.h"
 
 namespace
 {
@@ -79,6 +80,10 @@ int compile(const char* name, const char* text, const int text_size)
 {
     cci::notice::Initialize();
     cci::symbol::Initialize();
+    cci::code::Initialize();
+
+    cci::code::GenerateCode2(cci::code::kCall, -1); // main 関数の呼び出し、-1は仮設定
+    cci::code::GenerateCode1(cci::code::kStop); // プログラム終了
 
     cci::token::Initialize(name, text, text_size);
     cci::token::Token token;
@@ -107,6 +112,7 @@ int compile(const char* name, const char* text, const int text_size)
     }
 
     cci::token::Finalize();
+    cci::code::Finalize();
     cci::symbol::Finalize();
     cci::notice::Finalize();
 
