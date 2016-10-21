@@ -49,7 +49,7 @@ int GenerateCode3(const OparationCode opcode, const int flag, const int data);
  * @param flag フラグ
  * @return 現在のコード数、追加できなければ cci::code::kError を返す
  */
-int GenerateCode2(const OparationCode opcode, const int flag);
+int GenerateCode2(const OparationCode opcode, const int data);
 
 /**
  * コードを生成する

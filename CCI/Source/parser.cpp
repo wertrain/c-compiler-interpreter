@@ -24,13 +24,13 @@ bool GetNextToken(cci::token::Token &token)
     return (cci::token::GetNext(token) && token.kind_ != cci::token::kEof);
 }
 
-void DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType type)
+bool DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType type)
 {
     // 識別子かチェック
     if (!GetNextToken(token) || token.kind_ != cci::token::kIdentifier)
     {
         Notice(cci::notice::kErrorInvalidIdentifier, token.text_);
-        return;
+        return false;
     }
     // 型は確定しているので先行して作成
     cci::symbol::SymbolData* tmpSymbolData = cci::symbol::CreateSymbolData(token.text_);
@@ -40,7 +40,7 @@ void DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType t
     // 次のトークンを取得してから判定する
     if (!GetNextToken(token))
     {
-        return;
+        return false;
     }
     // 次のトークンが ( なら関数宣言
     if (token.kind_ == '(') // '(' == cci::token::kLeftParenthesis
@@ -52,6 +52,9 @@ void DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType t
     // それ以外では変数宣言
     else
     {
+        // 種類を変数に
+        tmpSymbolData->kind_ = cci::symbol::kVar;
+
         // , で複数の変数宣言される場合があるので繰り返す
         while (1)
         {
@@ -61,18 +64,16 @@ void DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType t
             {
                 if (!GetNextToken(token))
                 {
-                    return;
+                    return false;
                 }
                 // 配列の添え字がない
                 if (token.kind_ == ']') // ']' == cci::token::kRightBracket
                 {
                     Notice(cci::notice::kErrorNotFoundArrayIndex);
-                    return;
+                    return false;
                 }
                 // ここから未実装
             }
-            // 種類を変数に
-            tmpSymbolData->kind_ = cci::symbol::kVar;
             cci::symbol::Enter(tmpSymbolData);
 
             // 変数宣言の終了
@@ -86,16 +87,17 @@ void DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType t
                 if (!GetNextToken(token) || token.kind_ != cci::token::kIdentifier)
                 {
                     Notice(cci::notice::kErrorInvalidIdentifier, token.text_);
-                    return;
+                    return false;
                 }
                 tmpSymbolData = cci::symbol::CreateSymbolData(token.text_);
+                tmpSymbolData->kind_ = cci::symbol::kVar;
                 tmpSymbolData->dataType_ = type;
 
-                // もう一つ先を読んでおく
+                // この関数の処理に合わせて、もう一つ先を読んでおく
                 if (!GetNextToken(token))
                 {
                     Notice(cci::notice::kErrorInvalidIdentifier);
-                    return;
+                    return false;
                 }
                 continue;
             }
@@ -103,10 +105,11 @@ void DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType t
             {
                 // 宣言エラー
                 Notice(cci::notice::kErrorInvalidIdentifier, token.text_);
-                return;
+                return false;
             }
         }
     }
+    return true;
 }
 
 };

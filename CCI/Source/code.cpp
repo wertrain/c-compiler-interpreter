@@ -68,9 +68,9 @@ int GenerateCode3(const OparationCode opcode, const int flag, const int data)
     return GenerateCode(opcode, flag, data);
 }
 
-int GenerateCode2(const OparationCode opcode, const int flag)
+int GenerateCode2(const OparationCode opcode, const int data)
 {
-    return GenerateCode(opcode, flag, 0);
+    return GenerateCode(opcode, 0, data);
 }
 
 int GenerateCode1(const OparationCode opcode)
