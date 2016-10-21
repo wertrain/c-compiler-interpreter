@@ -81,6 +81,7 @@ Keyword keyword_table[] =
     {"=", kAssignment},
     {";", kSemicolon},
     {":", kColon},
+    {",", kComma},
     {"", kSentinel},
 };
 

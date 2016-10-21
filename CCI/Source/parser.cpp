@@ -22,15 +22,14 @@ bool GetNextToken(cci::token::Token &token)
 void DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType type)
 {
     // 識別子かチェック
-    if (GetNextToken(token) && token.kind_ != cci::token::kIdentifier)
+    if (!GetNextToken(token) || token.kind_ != cci::token::kIdentifier)
     {
         Notice(cci::notice::kErrorInvalidIdentifier);
         return;
     }
-
     cci::symbol::SymbolData* tmpSymbolData = cci::symbol::CreateSymbolData(token.text_);
     tmpSymbolData->dataType_ = type;
-            
+
     // C のスタイルではこの時点では関数宣言なのか変数宣言なのか判定できないので
     // 次のトークンを取得してから判定する
     if (!GetNextToken(token))
@@ -46,28 +45,52 @@ void DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType t
     // それ以外では変数宣言
     else
     {
-        // 配列の宣言かチェック
-        tmpSymbolData->arrayLength_ = 0;
-        if (!GetNextToken(token))
+        // , で複数の変数宣言される場合がある
+        while (1)
         {
-            return;
-        }
-        if (token.kind_ == '[') // '[' == cci::token::kLeftBracket
-        {
-            if (!GetNextToken(token))
+            // 配列の宣言かチェック
+            tmpSymbolData->arrayLength_ = 0;
+            if (token.kind_ == '[') // '[' == cci::token::kLeftBracket
             {
+                if (!GetNextToken(token))
+                {
+                    return;
+                }
+                // 配列の添え字がない
+                if (token.kind_ == ']') // ']' == cci::token::kRightBracket
+                {
+                    Notice(cci::notice::kErrorNotFoundArrayIndex);
+                    return;
+                }
+                // ここから未実装
+            }
+            tmpSymbolData->kind_ = cci::symbol::kVar;
+            cci::symbol::Enter(tmpSymbolData);
+
+            // 変数宣言の終了
+            if (token.kind_ == ';') // ';' == cci::token::kSemicolon
+            {
+                break;
+            }
+            // 変数宣言を続ける
+            else if (token.kind_ == ',') // ',' == cci::token::kComma
+            {
+                if (!GetNextToken(token) || token.kind_ != cci::token::kIdentifier)
+                {
+                    Notice(cci::notice::kErrorInvalidIdentifier);
+                    return;
+                }
+                tmpSymbolData = cci::symbol::CreateSymbolData(token.text_);
+                tmpSymbolData->dataType_ = type;
+                continue;
+            }
+            else
+            {
+                // 宣言エラー
+                Notice(cci::notice::kErrorInvalidIdentifier);
                 return;
             }
-            // 配列の添え字がない
-            if (token.kind_ == ']') // ']' == cci::token::kRightBracket
-            {
-                Notice(cci::notice::kErrorNotFoundArrayIndex);
-                return;
-            }
-            // ここから未実装
         }
-        tmpSymbolData->kind_ = cci::symbol::kVar;
-        cci::symbol::Enter(tmpSymbolData);
     }
 }
 
