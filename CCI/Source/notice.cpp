@@ -16,7 +16,7 @@ const char* kInternalErrorName = "Error Internal";
 
 bool Initialize()
 {
-    notice_count = 0;
+    ClearNotice();
     return true;
 }
 
@@ -37,6 +37,13 @@ void AddNotice(const char* message, const char* filename, const int line, const 
 void AddNotice(const NoticeMessageId id, const char* filename, const int line, const int character)
 {
     AddNotice(kNoticeMessageList[id], filename, line, character);
+}
+
+void AddNotice(const NoticeMessageId id, const char* text, const char* filename, const int line, const int character)
+{
+    char message[kNoticeMessageSize];
+    sprintf_s(message, kNoticeMessageSize, "%s:%s", text, kNoticeMessageList[id]);
+    AddNotice(message, filename, line, character);
 }
 
 void AddNotice(const NoticeMessageId id)
@@ -82,6 +89,19 @@ int GetNoticeCount(const NoticeType type)
 int GetNoticeAmountCount()
 {
     return notice_count;
+}
+
+void ClearNotice()
+{
+    for (int i = 0; i < kMaxNotice; ++i)
+    {
+        notice_list[i].type_ = kMax;
+        notice_list[i].filename_[0] = '\0';
+        notice_list[i].message_[0] = '\0';
+        notice_list[i].line_ = 0;
+        notice_list[i].character_ = 0;
+    }
+    notice_count = 0;
 }
 
 } // namespace notice

@@ -33,7 +33,7 @@ void ResetInner()
 
 int GenerateCode(const cci::code::OparationCode opcode, const int flag, const int data)
 {
-    if (codedata_count <= cci::code::kMaxCodeSize)
+    if (codedata_count >= cci::code::kMaxCodeSize)
     {
         cci::notice::AddNotice(cci::notice::kInternalErrorOverflowCodeData);
         return cci::code::kError;

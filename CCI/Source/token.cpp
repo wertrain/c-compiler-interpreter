@@ -264,7 +264,7 @@ bool GetNext(Token& token)
         {
             PrevChar();
         }
-        token.kind_ = kInt;
+        token.kind_ = kIntNum;
         token.value_ = num;
         break;
     case kCharSingleQuote:

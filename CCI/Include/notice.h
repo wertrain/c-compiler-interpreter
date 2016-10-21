@@ -45,11 +45,11 @@ static const char* kNoticeMessageList[] =
     "2文字以上の文字定数.",
     "'が見つからない.",
     "\"が見つからない.",
-    "無効な文字列."
+    "無効な文字列.",
     "不明な文字.",
-    "配列の添え字が見つからない.",
+    "配,列の添え字が見つからない.",
     "無効な識別子.",
-    "コードが格納できる最大サイズを超えた."
+    "コードが格納できる最大サイズを超えた.",
     "不明なエラー."
 };
 
@@ -94,6 +94,11 @@ void AddNotice(const char* message, const char* filename, const int line, const 
  * 通知の追加
  */
 void AddNotice(const NoticeMessageId id, const char* filename, const int line, const int character);
+
+/**
+ * 通知の追加
+ */
+void AddNotice(const NoticeMessageId id, const char* text, const char* filename, const int line, const int character);
 
 /**
  * 通知の追加

@@ -108,7 +108,7 @@ bool TestToken()
 
 bool TestParser()
 {
-    const int sample_text_num = 3;
+    const int sample_text_num = 4;
     const char* sample_text[sample_text_num] = 
     {
         {
@@ -122,6 +122,10 @@ bool TestParser()
         {
             "int dt, dt2;\n\
             dt2 = 100;\n"
+        },
+        {
+            "int dt, [4];\n\
+            dt = 100;\n"
         }
     };
     for (int i = 0; i < sample_text_num; ++i)
@@ -129,7 +133,17 @@ bool TestParser()
         std::cout << "========================" << std::endl;
         std::cout << "sample_text_" << i << ":" << std::endl;
         cci::parser::compile("sample_text", sample_text[i], strlen(sample_text[i]));
+
+        if (cci::notice::GetNoticeAmountCount() > 0)
+        {
+            cci::notice::PrintNotice();
+        }
+        else
+        {
+            std::cout << "no error." << std::endl;
+        }
     }
+
     return true;
 }
 

@@ -14,6 +14,11 @@ void Notice(const cci::notice::NoticeMessageId id)
     cci::notice::AddNotice(id, cci::token::GetCurrentName(), cci::token::GetCurrentLineCount(), cci::token::GetCurrentCharCount());
 }
 
+void Notice(const cci::notice::NoticeMessageId id, const char* text)
+{
+    cci::notice::AddNotice(id, text, cci::token::GetCurrentName(), cci::token::GetCurrentLineCount(), cci::token::GetCurrentCharCount());
+}
+
 bool GetNextToken(cci::token::Token &token)
 {
     return (cci::token::GetNext(token) && token.kind_ != cci::token::kEof);
@@ -24,9 +29,10 @@ void DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType t
     // 識別子かチェック
     if (!GetNextToken(token) || token.kind_ != cci::token::kIdentifier)
     {
-        Notice(cci::notice::kErrorInvalidIdentifier);
+        Notice(cci::notice::kErrorInvalidIdentifier, token.text_);
         return;
     }
+    // 型は確定しているので先行して作成
     cci::symbol::SymbolData* tmpSymbolData = cci::symbol::CreateSymbolData(token.text_);
     tmpSymbolData->dataType_ = type;
 
@@ -39,13 +45,14 @@ void DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType t
     // 次のトークンが ( なら関数宣言
     if (token.kind_ == '(') // '(' == cci::token::kLeftParenthesis
     {
+        // 種類を関数に
         tmpSymbolData->kind_ = cci::symbol::kFunction;
         cci::symbol::Enter(tmpSymbolData);
     }
     // それ以外では変数宣言
     else
     {
-        // , で複数の変数宣言される場合がある
+        // , で複数の変数宣言される場合があるので繰り返す
         while (1)
         {
             // 配列の宣言かチェック
@@ -64,6 +71,7 @@ void DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType t
                 }
                 // ここから未実装
             }
+            // 種類を変数に
             tmpSymbolData->kind_ = cci::symbol::kVar;
             cci::symbol::Enter(tmpSymbolData);
 
@@ -77,17 +85,24 @@ void DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType t
             {
                 if (!GetNextToken(token) || token.kind_ != cci::token::kIdentifier)
                 {
-                    Notice(cci::notice::kErrorInvalidIdentifier);
+                    Notice(cci::notice::kErrorInvalidIdentifier, token.text_);
                     return;
                 }
                 tmpSymbolData = cci::symbol::CreateSymbolData(token.text_);
                 tmpSymbolData->dataType_ = type;
+
+                // もう一つ先を読んでおく
+                if (!GetNextToken(token))
+                {
+                    Notice(cci::notice::kErrorInvalidIdentifier);
+                    return;
+                }
                 continue;
             }
             else
             {
                 // 宣言エラー
-                Notice(cci::notice::kErrorInvalidIdentifier);
+                Notice(cci::notice::kErrorInvalidIdentifier, token.text_);
                 return;
             }
         }
