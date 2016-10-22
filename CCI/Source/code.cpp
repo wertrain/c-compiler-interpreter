@@ -1,6 +1,7 @@
 #include "../include/code.h"
 
 #include "../include/notice.h"
+#include "../include/token.h"
 
 namespace
 {
@@ -76,6 +77,59 @@ int GenerateCode2(const OparationCode opcode, const int data)
 int GenerateCode1(const OparationCode opcode)
 {
     return GenerateCode(opcode, 0, 0);
+}
+
+void GenerateCodeBinary(const int kind)
+{
+    OparationCode code = kNop;
+    switch(kind)
+    {
+    case cci::token::kPlus:             code = kAdd;    break;
+    case cci::token::kMinus:            code = kSub;    break;
+    case cci::token::kMultiplication:   code = kMul;    break;
+    case cci::token::kDivision:         code = kDiv;    break;
+    case cci::token::kLess:             code = kLess;   break;
+    case cci::token::kLessEqual:        code = kLessEq; break;
+    case cci::token::kGreat:            code = kGrt;    break;
+    case cci::token::kGreatEqual:       code = kGrtEq;  break;
+    case cci::token::kEqual:            code = kEq;     break;
+    case cci::token::kNotEqual:         code = kNotEq;  break;
+    case cci::token::kAnd:              code = kAnd;    break;
+    case cci::token::kOr:               code = kOr;     break;
+    case cci::token::kModulo:           code = kMod;    break;
+    }
+    GenerateCode1(code);
+}
+
+void GenerateCodeUnArray(const int kind)
+{
+    OparationCode code = kNop;
+    switch(kind)
+    {
+    case cci::token::kPlus:      return;
+    case cci::token::kMinus:     code = kNeg;    break;
+    case cci::token::kNot:       code = kNot;    break;
+    case cci::token::kIncrease:  code = kInc;    break;
+    case cci::token::kDecrease:  code = kDec;    break;
+    }
+    GenerateCode1(code);
+}
+
+bool ToLeftValue()
+{
+    switch(codedata_array[codedata_count].opcode_)
+    {
+    case kVal: 
+       --codedata_count;
+       break;
+    case kLod:
+        codedata_array[codedata_count].opcode_ = kLda;
+        break;
+    // ïsê≥Ç»ç∂ï”íl
+    default:
+        return false;
+    }
+    return true;
 }
 
 } // namespace code

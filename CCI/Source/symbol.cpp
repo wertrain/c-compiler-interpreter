@@ -184,5 +184,17 @@ const SymbolData* SearchSymbolByName(const char* name)
     return nullptr;
 }
 
+int GetCodeFlag(const SymbolData *data)
+{
+    if (data->level_ == 0)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+}
+
 } // namespace symbol
 } // namespace cci

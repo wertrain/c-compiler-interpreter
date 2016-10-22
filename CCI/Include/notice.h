@@ -32,6 +32,9 @@ enum NoticeMessageId
     kErrorUnknownCharacter,
     kErrorNotFoundArrayIndex,
     kErrorInvalidIdentifier,
+    kErrorInvalidFormat,
+    kErrorInvalidLeftValue,
+    kErrorUnintendedEof,
     kInternalErrorOverflowCodeData,
     kErrorUnknown
 };
@@ -49,6 +52,9 @@ static const char* kNoticeMessageList[] =
     "不明な文字.",
     "配,列の添え字が見つからない.",
     "無効な識別子.",
+    "無効な記述.",
+    "無効な左辺値",
+    "意図しない終了.",
     "コードが格納できる最大サイズを超えた.",
     "不明なエラー."
 };

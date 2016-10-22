@@ -19,8 +19,8 @@ const int kError = -1;
  */
 enum OparationCode
 {
-    kNop, kInc, kDec, kNeg, kNot, kAdd, kSub, kMul, kDiv, kMod, kLess, kLseq, 
-    kGrt, kGteq, kEqu, kNteq, kAnd, kOr, kCall, kDel, kJmp, kJpt, kJpf, kEqcmp,
+    kNop, kInc, kDec, kNeg, kNot, kAdd, kSub, kMul, kDiv, kMod, kLess, kLessEq, 
+    kGrt, kGrtEq, kEq, kNotEq, kAnd, kOr, kCall, kDel, kJmp, kJpt, kJpf, kEqcmp,
     kLod, kLda, kLdi, kSto, kAdbr, kRet, kAss, kAssv, kVal, kLib, kStop
 };
 
@@ -57,6 +57,23 @@ int GenerateCode2(const OparationCode opcode, const int data);
  * @return 現在のコード数、追加できなければ cci::code::kError を返す
  */
 int GenerateCode1(const OparationCode opcode);
+
+/**
+ * コードを生成する
+ * @param kind トークン種類
+ */
+void GenerateCodeBinary(const int kind);
+
+/**
+ * コードを生成する
+ * @param kind トークン種類
+ */
+void GenerateCodeUnArray(const int kind);
+
+/**
+ * 左辺値にする
+ */
+bool ToLeftValue();
 
 } // namespace code
 } // namespace cci

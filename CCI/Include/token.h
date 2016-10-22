@@ -41,6 +41,10 @@ enum TokenKind
     kNotEqual,          // !=
     kLessEqual,         // <=
     kGreatEqual,        // >=
+    kAnd,               // &&
+    kOr,                // ||
+    kIncrease,          // ++
+    kDecrease,          // --
     kIf,                // if
     kElse,              // else
     kPuts,              // puts

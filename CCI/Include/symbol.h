@@ -57,6 +57,13 @@ void Finalize();
  */
 const SymbolData* SearchSymbolByName(const char* name);
 
+/**
+ * cci::code で使用するフラグを取得する
+ * @param data 判定するデータ
+ * @return 局所変数なら 1 それ以外なら 0
+ */
+int GetCodeFlag(const SymbolData *data);
+
 } // namespace symbol
 } // namespace cci
 

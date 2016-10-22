@@ -15,6 +15,11 @@ namespace
 static int block_nest_count = 0;
 
 /**
+ * 優先順位
+ */
+static int kMaxPriority = 8;
+
+/**
  * 内部処理をリセットする
  */
 void ResetInner()
@@ -59,6 +64,44 @@ cci::symbol::SymbolDataType GetSymbolDataType(const cci::token::TokenKind kind)
         return cci::symbol::kVoid;
     }
     return cci::symbol::kNon;
+}
+
+/**
+ * 二項演算子の優先順位を取得
+ */
+int GetPriority(const cci::token::TokenKind kind)
+{
+    switch(kind)
+    {
+    case cci::token::kMultiplication:
+    case cci::token::kDivision:
+    case cci::token::kModulo:
+        return kMaxPriority - 1;
+    case cci::token::kPlus:
+    case cci::token::kMinus:
+        return kMaxPriority - 2;
+    case cci::token::kLess:
+    case cci::token::kLessEqual:
+    case cci::token::kGreat:
+    case cci::token::kGreatEqual:
+        return kMaxPriority - 3;
+    case cci::token::kEqual:
+    case cci::token::kNotEqual:
+        return kMaxPriority - 4;
+    case cci::token::kAnd:
+        return kMaxPriority - 5;
+    case cci::token::kOr:
+        return kMaxPriority - 6;
+    case cci::token::kAssignment:
+        return kMaxPriority - 7;
+    default:
+        return 0;
+    }
+}
+
+void CallFunction(const cci::symbol::SymbolData* data)
+{
+
 }
 
 /**
@@ -141,6 +184,9 @@ bool EntryVars(cci::token::Token &token, const cci::symbol::SymbolDataType type)
     return true;
 }
 
+/**
+ * ブロック処理
+ */
 void block(cci::token::Token &token, const bool is_function)
 {
     if (!GetNextTokenInner(token))
@@ -170,6 +216,9 @@ void block(cci::token::Token &token, const bool is_function)
     GetNextTokenInner(token);
 }
 
+/**
+ * 関数と変数の登録判定
+ */
 bool DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType type)
 {
     // 識別子かチェック
@@ -196,6 +245,146 @@ bool DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType t
     else
     {
         return EntryVars(token, type);
+    }
+}
+
+/**
+ * 因子の処理
+ */
+void Factor(cci::token::Token &token)
+{
+    cci::token::TokenKind kind = token.kind_;
+    switch (kind)
+    {
+    case cci::token::kPlus:
+    case cci::token::kMinus:
+        GetNextTokenInner(token);
+        Factor(token);
+        cci::code::GenerateCodeUnArray(kind);
+        break;
+    case cci::token::kIncrease:
+    case cci::token::kDecrease:
+        GetNextTokenInner(token);
+        Factor(token);
+        if (!cci::code::ToLeftValue())
+        {
+            Notice(cci::notice::kErrorInvalidLeftValue, token.text_);
+        }
+        cci::code::GenerateCodeUnArray(kind);
+        break;
+    case cci::token::kIntNum:
+        cci::code::GenerateCode2(cci::code::kLdi, token.value_);
+        GetNextTokenInner(token);
+        break;
+    case cci::token::kIdentifier:
+        {
+            const cci::symbol::SymbolData *data = cci::symbol::SearchSymbolByName(token.text_);
+            switch (data->kind_)
+            {
+            case cci::symbol::kFunction:
+            case cci::symbol::kPrototype:
+                if (data->kind_ == cci::symbol::kVoid)
+                {
+                    // エラー
+                }
+                CallFunction(data);
+                break;
+            case cci::symbol::kVar:
+            case cci::symbol::kParam:
+                // 単純変数？
+                if (data->arrayLength_ == 0)
+                {
+                    cci::code::GenerateCode3(cci::code::kLod, cci::symbol::GetCodeFlag(data), data->address_);
+                    GetNextTokenInner(token);
+                }
+                break;
+            }
+        }
+        break;
+    default:
+        Notice(cci::notice::kErrorInvalidFormat);
+    }
+}
+
+/**
+ * 項の処理
+ */
+void Term(cci::token::Token &token, const int priority)
+{
+    if (priority == kMaxPriority)
+    {
+        Factor(token);
+        return;
+    }
+    Term(token, priority + 1);
+
+    cci::token::TokenKind kind;
+    while (priority == GetPriority(token.kind_))
+    {
+        kind = token.kind_;
+        GetNextTokenInner(token);
+        Term(token, priority + 1);
+        cci::code::GenerateCodeBinary(kind);
+    }
+}
+
+/**
+ * 式の処理
+ */
+void Expression()
+{
+
+}
+
+/**
+ * 文の処理
+ */
+void Statement(cci::token::Token &token)
+{
+    cci::token::TokenKind kind = token.kind_;
+    bool get_next = false;
+    
+    switch(kind)
+    {
+    // 識別子
+    case cci::token::kIdentifier:
+        {
+            const cci::symbol::SymbolData* data = cci::symbol::SearchSymbolByName(token.text_);
+            if (data == nullptr)
+            {
+                // 未定義の変数
+            }
+            else if ((data->kind_ == cci::symbol::kFunction || data->kind_ == cci::symbol::kPrototype) && data->dataType_ == cci::symbol::kVoid)
+            {
+
+            }
+            else
+            {
+
+            }
+        }
+        break;
+    // 非関数ブロック
+    case '{': // '{' == cci::token::kLeftCurlyBracket
+        block(token, false);
+        break;
+    // 文の終了
+    case ';': // ';' == cci::token::kSemicolon
+        get_next = true;
+        break;
+    // 意図しない終了
+    case cci::token::kEof:
+        Notice(cci::notice::kErrorUnintendedEof);
+        break;
+    // 無効な記述
+    default:
+        Notice(cci::notice::kErrorInvalidFormat);
+        get_next = true;
+    }
+
+    if (get_next)
+    {
+        GetNextTokenInner(token);
     }
 }
 
