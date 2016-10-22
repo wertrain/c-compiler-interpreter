@@ -91,7 +91,7 @@ bool EntryVars(cci::token::Token &token, const cci::symbol::SymbolDataType type)
         tmpSymbolData->arrayLength_ = 0;
         if (token.kind_ == '[') // '[' == cci::token::kLeftBracket
         {
-            if (!GetNextToken(token))
+            if (!GetNextTokenInner(token))
             {
                 return false;
             }
@@ -113,7 +113,7 @@ bool EntryVars(cci::token::Token &token, const cci::symbol::SymbolDataType type)
         // 変数宣言を続ける
         else if (token.kind_ == ',') // ',' == cci::token::kComma
         {
-            if (!GetNextToken(token) || token.kind_ != cci::token::kIdentifier)
+            if (!GetNextTokenInner(token) || token.kind_ != cci::token::kIdentifier)
             {
                 Notice(cci::notice::kErrorInvalidIdentifier, token.text_);
                 return false;
@@ -176,7 +176,7 @@ bool DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType t
     // C のスタイルではこの時点では関数宣言なのか変数宣言なのか判定できないので
     // 次のトークンを取得してから判定する
     cci::token::Token next_token;
-    if (!GetNextToken(next_token))
+    if (!GetNextTokenInner(next_token))
     {
         return false;
     }
