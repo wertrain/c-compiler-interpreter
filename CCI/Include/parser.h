@@ -4,6 +4,13 @@
 namespace cci {
 namespace parser {
 
+/**
+ * コンパイルを行う
+ * @param name ファイル名
+ * @param text コンパイル対象のテキスト
+ * @param text_size コンパイル対象のテキストのサイズ
+ * @return 
+ */
 int compile(const char* name, const char* text, const int text_size);
 
 } // namespace parser

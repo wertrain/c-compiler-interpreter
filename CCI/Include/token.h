@@ -35,6 +35,8 @@ enum TokenKind
     kGreat              = '>',
     kLeftBracket        = '[',
     kRightBracket       = ']',
+    kLeftCurlyBracket   = '{', // MEMO: kLeftBrace の方がいい？
+    kRightCurlyBracket  = '}',
     kEqual,             // ==
     kNotEqual,          // !=
     kLessEqual,         // <=
@@ -85,7 +87,12 @@ void Finalize();
 /**
  * 次のトークンの取得
  */
-bool GetNext(Token& token);
+bool GetNextToken(Token& token);
+
+/**
+ * 前のトークンに戻す（連続使用不可）
+ */
+bool PreviousToken();
 
 /**
  * 現在処理中の名前を取得する

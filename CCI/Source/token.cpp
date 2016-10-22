@@ -23,6 +23,13 @@ static int current_line_count = 0;
 static int current_character_count = 0;
 
 /**
+ * 前回のトークン位置
+ */
+static const char* target_text_previous_char = nullptr;
+static int previous_line_count = 0;
+static int previous_character_count = 0;
+
+/**
  * ターゲット名
  */
 const int kTargetNameSize = 256;
@@ -214,7 +221,7 @@ void Finalize()
 
 }
 
-bool GetNext(Token& token)
+bool GetNextToken(Token& token)
 {
     token.kind_ = kNon;
     memset(token.text_, '\0', sizeof(token.text_));
@@ -224,6 +231,11 @@ bool GetNext(Token& token)
     char* token_text_pointer_id_max = token.text_ + kTokenIdSize;
     char* token_text_pointer_text_max = token.text_ + kTokenTextSize;
     int num = 0, sq_count = 0;
+
+    // 現在のトークン位置を保存
+    target_text_previous_char = target_text_current_char;
+    previous_line_count = current_line_count;
+    previous_character_count = current_character_count;
 
     int ch = NextChar();
     while (isspace(ch))
@@ -336,6 +348,21 @@ bool GetNext(Token& token)
     {
         SetKind(token);
     }
+    return true;
+}
+
+bool PreviousToken()
+{
+    if (target_text_previous_char == nullptr)
+    {
+        return false;
+    }
+
+    target_text_current_char = target_text_previous_char;
+    current_line_count = previous_line_count;
+    current_character_count = previous_character_count;
+    target_text_previous_char = nullptr;
+
     return true;
 }
 

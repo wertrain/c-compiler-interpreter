@@ -84,14 +84,14 @@ bool TestToken()
         cci::notice::Initialize();
         cci::token::Initialize("sample_text", sample_text[i], strlen(sample_text[i]));
         cci::token::Token token;
-        cci::token::GetNext(token);
+        cci::token::GetNextToken(token);
         
         std::cout << "========================" << std::endl;
         std::cout << "sample_text_" << i << ":" << std::endl;
         while (token.kind_ != cci::token::kEof)
         {
             std::cout << token.text_ << " " << token.kind_ << " " << token.value_ << std::endl;
-            cci::token::GetNext(token);
+            cci::token::GetNextToken(token);
         }
         if (cci::notice::GetNoticeAmountCount() > 0)
         {
