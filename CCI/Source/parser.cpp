@@ -61,6 +61,9 @@ cci::symbol::SymbolDataType GetSymbolDataType(const cci::token::TokenKind kind)
     return cci::symbol::kNon;
 }
 
+/**
+ * 関数をシンボルに追加する
+ */
 bool EntryFunction(cci::token::Token &token, const cci::symbol::SymbolDataType type)
 {
     cci::symbol::SymbolData* tmpSymbolData = cci::symbol::CreateSymbolData(token.text_);
@@ -72,6 +75,9 @@ bool EntryFunction(cci::token::Token &token, const cci::symbol::SymbolDataType t
     return true;
 }
 
+/**
+ * 変数をシンボルに追加する
+ */
 bool EntryVars(cci::token::Token &token, const cci::symbol::SymbolDataType type)
 {
     cci::symbol::SymbolData* tmpSymbolData = cci::symbol::CreateSymbolData(token.text_);
@@ -176,14 +182,8 @@ bool DefineVarOrFunction(cci::token::Token &token, cci::symbol::SymbolDataType t
     // C のスタイルではこの時点では関数宣言なのか変数宣言なのか判定できないので
     // 次のトークンを取得してから判定する
     cci::token::Token next_token;
-    if (!GetNextTokenInner(next_token))
+    if (!cci::token::CheckNextToken(next_token))
     {
-        return false;
-    }
-    // チェックのために読んだトークンを戻しておく
-    if (!cci::token::PreviousToken())
-    {
-        assert(false); // あり得ないはず
         return false;
     }
 

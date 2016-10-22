@@ -95,6 +95,11 @@ bool GetNextToken(Token& token);
 bool PreviousToken();
 
 /**
+ * ポインタを進めずに次のトークンを取得する
+ */
+bool CheckNextToken(Token& token);
+
+/**
  * 現在処理中の名前を取得する
  * @return 現在の名前
  */

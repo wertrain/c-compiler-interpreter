@@ -366,6 +366,11 @@ bool PreviousToken()
     return true;
 }
 
+bool CheckNextToken(Token& token)
+{
+    return GetNextToken(token) && PreviousToken();
+}
+
 const char* GetCurrentName()
 {
     return target_name;
