@@ -88,8 +88,24 @@ bool EntryHashTable(const cci::symbol::SymbolData *src)
 namespace cci {
 namespace symbol {
 
+/**
+ * 定義格納配列
+ */
 SymbolData* symbol_pointer_array[cci::symbol::kMaxSymbol];
+/**
+ * 定義格納配列の最終位置
+ */
 static int symbol_pointer_array_index = 0;
+
+/**
+ * 局所変数記号表空き
+ */
+static const int kEmptyLocalSymbol = 9999;
+
+/**
+ * 局所変数の開始位置
+ */
+static int start_local_symbol = kEmptyLocalSymbol;
 
 bool Initialize()
 {
@@ -194,6 +210,17 @@ int GetCodeFlag(const SymbolData *data)
     {
         return 1;
     }
+}
+
+void OpenLocalSymbol()
+{
+    start_local_symbol = symbol_pointer_array_index + 1;
+}
+
+void CloseLocalSymbol(const SymbolData* data)
+{
+    symbol_pointer_array_index = start_local_symbol - 1 + data->args_;
+    start_local_symbol = kEmptyLocalSymbol;
 }
 
 } // namespace symbol

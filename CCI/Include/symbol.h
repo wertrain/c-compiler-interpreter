@@ -64,6 +64,16 @@ const SymbolData* SearchSymbolByName(const char* name);
  */
 int GetCodeFlag(const SymbolData *data);
 
+/**
+ * 局所記号表の開始
+ */
+void OpenLocalSymbol();
+
+/**
+ * 局所記号表の終了
+ */
+void CloseLocalSymbol(const SymbolData* data);
+
 } // namespace symbol
 } // namespace cci
 

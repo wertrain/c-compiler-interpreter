@@ -17,7 +17,30 @@ static int block_nest_count = 0;
 /**
  * 優先順位
  */
+static int kMinPriority = 0;
 static int kMaxPriority = 8;
+
+/**
+ * 最後に処理した式のトークンの種類
+ */
+cci::token::TokenKind last_statement_token_kind = cci::token::kNon;
+
+
+/**
+ * 局所変数アドレス管理
+ */
+static int local_var_address = 0;
+
+/**
+ * 局所変数アドレス割り付け開始番地
+ */
+static const int kStartLocalAddress = 1 * sizeof(int);
+
+/**
+ * 内部関数のプロトタイプ（必要な関数のみ）
+ */
+void block(cci::token::Token &token, const bool is_function);
+void Statement(cci::token::Token &token);
 
 /**
  * 内部処理をリセットする
@@ -109,12 +132,14 @@ void CallFunction(const cci::symbol::SymbolData* data)
  */
 bool EntryFunction(cci::token::Token &token, const cci::symbol::SymbolDataType type)
 {
-    cci::symbol::SymbolData* tmpSymbolData = cci::symbol::CreateSymbolData(token.text_);
-    tmpSymbolData->kind_ = cci::symbol::kFunction; // 関数として追加
-    tmpSymbolData->dataType_ = type;
-    tmpSymbolData->level_ = block_nest_count;
-    cci::symbol::Enter(tmpSymbolData);
-    // ここから未実装
+    local_var_address = kStartLocalAddress;
+    const cci::symbol::SymbolData* find = cci::symbol::SearchSymbolByName(token.text_);
+    if (find != nullptr && find->kind_ != cci::symbol::kFunction && find->kind_ != cci::symbol::kPrototype)
+    {
+        Notice(cci::notice::kErrorAlreadyUsedName, token.text_);
+        return false;
+    }
+
     return true;
 }
 
@@ -182,38 +207,6 @@ bool EntryVars(cci::token::Token &token, const cci::symbol::SymbolDataType type)
     }
 
     return true;
-}
-
-/**
- * ブロック処理
- */
-void block(cci::token::Token &token, const bool is_function)
-{
-    if (!GetNextTokenInner(token))
-    {
-        return;
-    }
-    ++block_nest_count;
-    
-    // 関数なら先頭で定義されている変数をチェックする
-    if (is_function)
-    {
-        cci::symbol::SymbolDataType type = GetSymbolDataType(token.kind_);
-        while (type != cci::symbol::kNon)
-        {
-            EntryVars(token, type);
-        }
-    }
-
-    // 文の処理
-    cci::token::TokenKind kind = cci::token::kOther;
-    while (token.kind_ != '}') // '}' == cci::token::kRightCurlyBracket
-    {
-        kind = token.kind_;
-    }
-
-    --block_nest_count;
-    GetNextTokenInner(token);
 }
 
 /**
@@ -361,9 +354,16 @@ void Term(cci::token::Token &token, const int priority)
 /**
  * 式の処理
  */
-void Expression()
+void Expression(cci::token::Token &token)
 {
-
+    Term(token, kMinPriority + 2);
+    if (token.kind_ == '=') // '{' == cci::token::kAssignment
+    {
+        cci::code::ToLeftValue();
+        GetNextTokenInner(token);
+        Expression(token);
+        cci::code::GenerateCode1(cci::code::kAssv);
+    }
 }
 
 /**
@@ -416,6 +416,40 @@ void Statement(cci::token::Token &token)
     {
         GetNextTokenInner(token);
     }
+}
+
+/**
+ * ブロック処理
+ */
+void block(cci::token::Token &token, const bool is_function)
+{
+    if (!GetNextTokenInner(token))
+    {
+        return;
+    }
+    ++block_nest_count;
+    
+    // 関数なら先頭で定義されている変数をチェックする
+    if (is_function)
+    {
+        cci::symbol::SymbolDataType type = GetSymbolDataType(token.kind_);
+        while (type != cci::symbol::kNon)
+        {
+            EntryVars(token, type);
+        }
+    }
+
+    // 文の処理
+    cci::token::TokenKind kind = cci::token::kOther;
+    while (token.kind_ != '}') // '}' == cci::token::kRightCurlyBracket
+    {
+        kind = token.kind_;
+        Statement(token);
+    }
+    last_statement_token_kind = kind;
+
+    --block_nest_count;
+    GetNextTokenInner(token);
 }
 
 };

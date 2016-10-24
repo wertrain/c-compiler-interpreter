@@ -35,6 +35,7 @@ enum NoticeMessageId
     kErrorInvalidFormat,
     kErrorInvalidLeftValue,
     kErrorUnintendedEof,
+    kErrorAlreadyUsedName,
     kInternalErrorOverflowCodeData,
     kErrorUnknown
 };
@@ -55,6 +56,7 @@ static const char* kNoticeMessageList[] =
     "無効な記述.",
     "無効な左辺値",
     "意図しない終了.",
+    "この名前は既に使用させれている.",
     "コードが格納できる最大サイズを超えた.",
     "不明なエラー."
 };
