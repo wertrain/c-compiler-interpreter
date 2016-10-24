@@ -291,11 +291,41 @@ void Factor(cci::token::Token &token)
                 break;
             case cci::symbol::kVar:
             case cci::symbol::kParam:
-                // ’Pƒ•Ï”H
+                // ’Pƒ•Ï”‚©”»’è
                 if (data->arrayLength_ == 0)
                 {
                     cci::code::GenerateCode3(cci::code::kLod, cci::symbol::GetCodeFlag(data), data->address_);
                     GetNextTokenInner(token);
+                }
+                else
+                {
+                    GetNextTokenInner(token);
+                    if (token.kind_ == '[') // '[' == cci::token::kLeftBracket
+                    {
+                        cci::code::GenerateCode3(cci::code::kLda, cci::symbol::GetCodeFlag(data), data->address_);
+                        // ‚±‚±‚©‚ç–¢ŽÀ‘•
+                    }
+                    else
+                    {
+                        Notice(cci::notice::kErrorNotFoundArrayIndex);
+                    }
+
+                    if (token.kind_ == cci::token::kIncrease)
+                    {
+                        cci::code::ToLeftValue();
+                        cci::code::GenerateCode1(cci::code::kInc);
+                        cci::code::GenerateCode2(cci::code::kLdi, 1);
+                        cci::code::GenerateCode1(cci::code::kSub);
+                        GetNextTokenInner(token);
+                    }
+                    else if (token.kind_ == cci::token::kDecrease)
+                    {
+                        cci::code::ToLeftValue();
+                        cci::code::GenerateCode1(cci::code::kDec);
+                        cci::code::GenerateCode2(cci::code::kLdi, 1);
+                        cci::code::GenerateCode1(cci::code::kAdd);
+                        GetNextTokenInner(token);
+                    }
                 }
                 break;
             }
