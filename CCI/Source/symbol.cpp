@@ -89,11 +89,12 @@ namespace cci {
 namespace symbol {
 
 /**
- * 定義格納配列
+ * SymbolData 実体のポインタ配列
  */
 SymbolData* symbol_pointer_array[cci::symbol::kMaxSymbol];
+
 /**
- * 定義格納配列の最終位置
+ * SymbolData 実体のポインタ配列の最終位置
  */
 static int symbol_pointer_array_index = 0;
 
@@ -167,6 +168,7 @@ SymbolData* CreateSymbolData(const char* name)
     p->name_ = new char[name_length];
     strcpy_s(p->name_, name_length, name);
     symbol_pointer_array[symbol_pointer_array_index] = p;
+    p->args_ = p->arrayLength_ = p->address_ = p->level_ = 0;
     ++symbol_pointer_array_index;
     return p;
 }
@@ -214,13 +216,13 @@ int GetCodeFlag(const SymbolData *data)
 
 void OpenLocalSymbol()
 {
-    start_local_symbol = symbol_pointer_array_index + 1;
+    //start_local_symbol = symbol_pointer_array_index + 1;
 }
 
 void CloseLocalSymbol(const SymbolData* data)
 {
-    symbol_pointer_array_index = start_local_symbol - 1 + data->args_;
-    start_local_symbol = kEmptyLocalSymbol;
+    //symbol_pointer_array_index = start_local_symbol - 1 + data->args_;
+    //start_local_symbol = kEmptyLocalSymbol;
 }
 
 } // namespace symbol

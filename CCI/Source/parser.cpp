@@ -1,6 +1,7 @@
 #include "../include/parser.h"
 
 #include <cassert>
+#include <cstring>
 #include "../include/token.h"
 #include "../include/notice.h"
 #include "../include/symbol.h"
@@ -34,7 +35,15 @@ static int local_var_address = 0;
 /**
  * 局所変数アドレス割り付け開始番地
  */
-static const int kStartLocalAddress = 1 * sizeof(int);
+static const int kIntSize = sizeof(int);
+static const int kStartLocalAddress = 1 * kIntSize;
+
+/**
+ * 大域アドレス管理
+ */
+static const int kMaxGlobalMemorySize = 0xFFFF;
+static char global_memory[kMaxGlobalMemorySize];
+static int global_address = 1 * kIntSize;
 
 /**
  * 内部関数のプロトタイプ（必要な関数のみ）
@@ -64,6 +73,38 @@ void Notice(const cci::notice::NoticeMessageId id)
 void Notice(const cci::notice::NoticeMessageId id, const char* text)
 {
     cci::notice::AddNotice(id, text, cci::token::GetCurrentName(), cci::token::GetCurrentLineCount(), cci::token::GetCurrentCharCount());
+}
+
+/**
+ * 局所メモリを確保
+ */
+int AllocLocal(const int size)
+{
+    if (size <= 0)
+    {
+        return 0;
+    }
+    local_var_address += size;
+    return (local_var_address - size);
+}
+
+/**
+ * 大域アドレスを確保
+ */
+int AllocGlobal(const int size)
+{
+    if (size <= 0)
+    {
+        return global_address;
+    }
+    global_address = (global_address + 3) / 4 * 4;
+    if (global_address + size > kMaxGlobalMemorySize)
+    {
+        Notice(cci::notice::kInternalErrorNotEnoughMemory);
+    }
+    std::memset(global_memory + global_address, 0, size);
+    global_address += size;
+    return (global_address - size);
 }
 
 /**
@@ -138,6 +179,52 @@ bool EntryFunction(cci::token::Token &token, const cci::symbol::SymbolDataType t
     {
         Notice(cci::notice::kErrorAlreadyUsedName, token.text_);
         return false;
+    }
+
+    cci::symbol::SymbolData* tmpSymbolData = cci::symbol::CreateSymbolData(token.text_);
+    tmpSymbolData->kind_ = cci::symbol::kFunction; // 関数として追加
+    tmpSymbolData->dataType_ = type;
+    tmpSymbolData->level_ = block_nest_count;
+    cci::symbol::Enter(tmpSymbolData);
+
+    if (!GetNextTokenInner(token))
+    {
+        return false;
+    }
+
+    cci::symbol::OpenLocalSymbol();
+    switch (token.kind_)
+    {
+    case cci::token::kVoid:
+        GetNextTokenInner(token);
+        break;
+    case '}': // '}' == cci::token::kRightCurlyBracket
+        break;
+    default:
+        while (1)
+        {
+            cci::symbol::SymbolData* paramSymbolData = cci::symbol::CreateSymbolData(token.text_);
+            paramSymbolData->kind_ = cci::symbol::kParam; // 関数引数として追加
+            paramSymbolData->dataType_ = GetSymbolDataType(token.kind_);
+            paramSymbolData->level_ = block_nest_count;
+
+            ++(tmpSymbolData->args_);
+            if (token.kind_ != ',')
+            {
+                break;
+            }
+            GetNextTokenInner(token);
+        }
+        if (!GetNextTokenInner(token) || token.kind_ != ')' || // ')' == cci::token::kRightParenthesis
+            !GetNextTokenInner(token)) 
+        {
+            return false;
+        }
+        
+        if (token.kind_ == ';') // cci::token::kSemicolon
+        {
+            tmpSymbolData->kind_ = cci::symbol::kPrototype;
+        }
     }
 
     return true;

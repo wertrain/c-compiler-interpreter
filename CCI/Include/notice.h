@@ -37,6 +37,7 @@ enum NoticeMessageId
     kErrorUnintendedEof,
     kErrorAlreadyUsedName,
     kInternalErrorOverflowCodeData,
+    kInternalErrorNotEnoughMemory,
     kErrorUnknown
 };
  
@@ -58,6 +59,7 @@ static const char* kNoticeMessageList[] =
     "意図しない終了.",
     "この名前は既に使用させれている.",
     "コードが格納できる最大サイズを超えた.",
+    "メモリが不足している",
     "不明なエラー."
 };
 
