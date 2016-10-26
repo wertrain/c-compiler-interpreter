@@ -108,7 +108,7 @@ bool TestToken()
 
 bool TestParser()
 {
-    const int sample_text_num = 4;
+    const int sample_text_num = 5;
     const char* sample_text[sample_text_num] = 
     {
         {
@@ -126,6 +126,12 @@ bool TestParser()
         {
             "int dt, [4];\n\
             dt = 100;\n"
+        },
+        {
+            "int func1(){\n\
+            }\n\
+            int func2(int args){\n\
+            }\n"
         }
     };
     for (int i = 0; i < sample_text_num; ++i)

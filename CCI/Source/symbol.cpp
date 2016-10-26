@@ -130,15 +130,22 @@ void Finalize()
         SymbolDataLinkItem* p = hash_table[i];
         while(p != nullptr)
         {
+            std::cout << i << ": ";
+
             if (p->data_->kind_ == kVar)
             {
                 std::cout << "Var - ";
             }
             else 
             {
-                std::cout << "Function - ";
+                std::cout << "Function";
+                if (p->data_->args_ > 0)
+                {
+                    std::cout << " (args: " << static_cast<int>(p->data_->args_) << ")";
+                }
+                std::cout << " - ";
             }
-            std::cout << i << ": " << p->data_->name_ << std::endl;
+            std::cout << p->data_->name_ << std::endl;
             p = p->next_;
         }
     }

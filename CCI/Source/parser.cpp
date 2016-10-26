@@ -101,6 +101,7 @@ int AllocGlobal(const int size)
     if (global_address + size > kMaxGlobalMemorySize)
     {
         Notice(cci::notice::kInternalErrorNotEnoughMemory);
+        return 0;
     }
     std::memset(global_memory + global_address, 0, size);
     global_address += size;
@@ -187,7 +188,8 @@ bool EntryFunction(cci::token::Token &token, const cci::symbol::SymbolDataType t
     tmpSymbolData->level_ = block_nest_count;
     cci::symbol::Enter(tmpSymbolData);
 
-    if (!GetNextTokenInner(token))
+    if (!GetNextTokenInner(token) || token.kind_ != '(' || // ')' == cci::token::kLeftParenthesis
+        !GetNextTokenInner(token)) 
     {
         return false;
     }
@@ -198,22 +200,42 @@ bool EntryFunction(cci::token::Token &token, const cci::symbol::SymbolDataType t
     case cci::token::kVoid:
         GetNextTokenInner(token);
         break;
-    case '}': // '}' == cci::token::kRightCurlyBracket
+    case ')': // ')' == cci::token::kRightParenthesis
         break;
     default:
         while (1)
         {
+            const cci::symbol::SymbolDataType type = GetSymbolDataType(token.kind_);
+            if (type == cci::symbol::kNon)
+            {
+                Notice(cci::notice::kErrorInvalidType, token.text_);
+                return false;
+            }
+
+            if (!GetNextTokenInner(token)) 
+            {
+                return false;
+            }
             cci::symbol::SymbolData* paramSymbolData = cci::symbol::CreateSymbolData(token.text_);
             paramSymbolData->kind_ = cci::symbol::kParam; // ŠÖ”ˆø”‚Æ‚µ‚Ä’Ç‰Á
-            paramSymbolData->dataType_ = GetSymbolDataType(token.kind_);
+            paramSymbolData->dataType_ = type;
             paramSymbolData->level_ = block_nest_count;
 
             ++(tmpSymbolData->args_);
-            if (token.kind_ != ',')
+
+            if (!GetNextTokenInner(token)) 
             {
-                break;
+                return false;
             }
-            GetNextTokenInner(token);
+            if (token.kind_ == ')' &&  // ')' == cci::token::kRightParenthesis
+                GetNextTokenInner(token))
+            {
+                return true;
+            }
+            if (!GetNextTokenInner(token)) 
+            {
+                return false;
+            }
         }
         if (!GetNextTokenInner(token) || token.kind_ != ')' || // ')' == cci::token::kRightParenthesis
             !GetNextTokenInner(token)) 
