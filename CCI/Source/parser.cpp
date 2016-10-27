@@ -203,6 +203,7 @@ bool EntryFunction(cci::token::Token &token, const cci::symbol::SymbolDataType t
     case ')': // ')' == cci::token::kRightParenthesis
         break;
     default:
+        // ŠÖ”ˆø”‚Ì“o˜^
         while (1)
         {
             const cci::symbol::SymbolDataType type = GetSymbolDataType(token.kind_);
