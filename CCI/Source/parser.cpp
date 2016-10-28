@@ -496,11 +496,13 @@ void Statement(cci::token::Token &token)
             }
             else if ((data->kind_ == cci::symbol::kFunction || data->kind_ == cci::symbol::kPrototype) && data->dataType_ == cci::symbol::kVoid)
             {
-
+                CallFunction(data);
+                get_next = true;
             }
             else
             {
-
+                Expression(token);
+                cci::code::RemoveValue();
             }
         }
         break;

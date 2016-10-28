@@ -75,6 +75,12 @@ void GenerateCodeUnArray(const int kind);
  */
 bool ToLeftValue();
 
+/**
+ * 式の値を残す kAssv を kAss に変更する
+ * または、 kDel を追加する
+ */
+void RemoveValue();
+
 } // namespace code
 } // namespace cci
 

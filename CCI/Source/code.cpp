@@ -123,13 +123,26 @@ bool ToLeftValue()
        --codedata_count;
        break;
     case kLod:
-        codedata_array[codedata_count].opcode_ = kLda;
+        codedata_array[codedata_count - 1].opcode_ = kLda;
         break;
     // ïsê≥Ç»ç∂ï”íl
     default:
         return false;
     }
     return true;
+}
+
+void RemoveValue()
+{
+    const int index = codedata_count - 1;
+    if (codedata_array[index].opcode_ == kAssv)
+    {
+        codedata_array[index].opcode_ = kAss;
+    }
+    else
+    {
+        GenerateCode1(kDel);
+    }
 }
 
 } // namespace code
