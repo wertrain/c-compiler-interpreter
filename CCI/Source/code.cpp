@@ -3,6 +3,10 @@
 #include "../include/notice.h"
 #include "../include/token.h"
 
+#ifdef _DEBUG
+#include <iostream>
+#endif // _DEBUG
+
 namespace
 {
 
@@ -144,6 +148,29 @@ void RemoveValue()
         GenerateCode1(kDel);
     }
 }
+
+#ifdef _DEBUG
+
+static const char* kOparationCodeText[] =
+{
+    "kNop", "kInc", "kDec", "kNeg", "kNot", "kAdd", "kSub", "kMul", "kDiv", "kMod", "kLess", "kLessEq", 
+    "kGrt", "kGrtEq", "kEq", "kNotEq", "kAnd", "kOr", "kCall", "kDel", "kJmp", "kJpt", "kJpf", "kEqcmp",
+    "kLod", "kLda", "kLdi", "kSto", "kAdbr", "kRet", "kAss", "kAssv", "kVal", "kLib", "kStop"
+};
+
+void DumpCodes(const cci::code::OparationCode opcode, const int flag, const int data)
+{
+    for (int i = 0; i < codedata_count; ++i)
+    {
+        int index = codedata_count - i;
+        std::cout << "[" << kOparationCodeText[codedata_array[index].opcode_] << "]" << " - ";
+        std::cout << codedata_array[index].flag_ << " - ";;
+        std::cout << codedata_array[index].data_;
+        std::cout << std::endl;
+    }
+}
+
+#endif // _DEBUG
 
 } // namespace code
 } // namespace cci

@@ -89,6 +89,14 @@ int AllocLocal(const int size)
 }
 
 /**
+ * 局所メモリをクリア
+ */
+void ClearLocal()
+{
+    local_var_address = 0;
+}
+
+/**
  * 大域アドレスを確保
  */
 int AllocGlobal(const int size)
@@ -164,9 +172,29 @@ int GetPriority(const cci::token::TokenKind kind)
     }
 }
 
+/**
+ * 関数呼び出し
+ */
 void CallFunction(const cci::symbol::SymbolData* data)
 {
 
+}
+
+/**
+ * システム関数呼び出し
+ */
+bool CallSystemFunction(cci::token::Token &token)
+{
+    switch(token.kind_)
+    {
+    case cci::token::kPrintf:
+    case cci::token::kInput:
+    case cci::token::kExit:
+        break;
+    default:
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -188,7 +216,7 @@ bool EntryFunction(cci::token::Token &token, const cci::symbol::SymbolDataType t
     tmpSymbolData->level_ = block_nest_count;
     cci::symbol::Enter(tmpSymbolData);
 
-    if (!GetNextTokenInner(token) || token.kind_ != '(' || // ')' == cci::token::kLeftParenthesis
+    if (!GetNextTokenInner(token) || token.kind_ != '(' || // '(' == cci::token::kLeftParenthesis
         !GetNextTokenInner(token)) 
     {
         return false;
@@ -433,6 +461,12 @@ void Factor(cci::token::Token &token)
                 break;
             }
         }
+        break;
+    // 組み込み関数の処理
+    case cci::token::kPrintf:
+    case cci::token::kInput:
+    case cci::token::kExit:
+        CallSystemFunction(token);
         break;
     default:
         Notice(cci::notice::kErrorInvalidFormat);
