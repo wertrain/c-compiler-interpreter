@@ -81,6 +81,15 @@ bool ToLeftValue();
  */
 void RemoveValue();
 
+#ifdef _DEBUG
+
+/**
+ * 配列内容をダンプする
+ */
+void DumpCodes();
+
+#endif // _DEBUG
+
 } // namespace code
 } // namespace cci
 

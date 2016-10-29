@@ -108,37 +108,65 @@ bool TestToken()
 
 bool TestParser()
 {
+    const int sample_pattern = 2;
     const int sample_text_num = 5;
-    const char* sample_text[sample_text_num] = 
+    const char* sample_text[sample_pattern][sample_text_num] = 
     {
         {
-            "int dt;\n\
-            dt = 100;\n"
+            {
+                "int dt;\n\
+                dt = 100;\n"
+            },
+            {
+                "int func();\n\
+                func();\n"
+            },
+            {
+                "int dt, dt2;\n\
+                dt2 = 100;\n"
+            },
+            {
+                "int dt, [4];\n\
+                dt = 100;\n"
+            },
+            {
+                "int func1(){\n\
+                }\n\
+                int func2(int args){\n\
+                }\n"
+            }
         },
         {
-            "int func();\n\
-            func();\n"
-        },
-        {
-            "int dt, dt2;\n\
-            dt2 = 100;\n"
-        },
-        {
-            "int dt, [4];\n\
-            dt = 100;\n"
-        },
-        {
-            "int func1(){\n\
-            }\n\
-            int func2(int args){\n\
-            }\n"
+            {
+                "int dt;\n\
+                dt = 100;\n"
+            },
+            {
+                "int func();\n\
+                func();\n"
+            },
+            {
+                "int dt, dt2;\n\
+                dt2 = 100;\n"
+            },
+            {
+                "int dt, [4];\n\
+                dt = 100;\n"
+            },
+            {
+                "int func1(){\n\
+                }\n\
+                int func2(int args){\n\
+                }\n"
+            }
         }
     };
+    const int test_pattern = 1;
     for (int i = 0; i < sample_text_num; ++i)
     {
         std::cout << "========================" << std::endl;
         std::cout << "sample_text_" << i << ":" << std::endl;
-        cci::parser::compile("sample_text", sample_text[i], strlen(sample_text[i]));
+        cci::parser::compile("sample_text", sample_text[test_pattern][i], strlen(sample_text[test_pattern][i]));
 
         if (cci::notice::GetNoticeAmountCount() > 0)
         {

@@ -634,6 +634,8 @@ int compile(const char* name, const char* text, const int text_size)
         }
     }
 
+    cci::symbol::DumpTable();
+
     cci::token::Finalize();
     cci::code::Finalize();
     cci::symbol::Finalize();

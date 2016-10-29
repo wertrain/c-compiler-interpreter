@@ -158,7 +158,7 @@ static const char* kOparationCodeText[] =
     "kLod", "kLda", "kLdi", "kSto", "kAdbr", "kRet", "kAss", "kAssv", "kVal", "kLib", "kStop"
 };
 
-void DumpCodes(const cci::code::OparationCode opcode, const int flag, const int data)
+void DumpCodes()
 {
     for (int i = 0; i < codedata_count; ++i)
     {

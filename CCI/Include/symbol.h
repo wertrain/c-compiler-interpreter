@@ -74,6 +74,15 @@ void OpenLocalSymbol();
  */
 void CloseLocalSymbol(const SymbolData* data);
 
+#ifdef _DEBUG
+
+/**
+ * テーブル内容をダンプする
+ */
+void DumpTable();
+
+#endif // _DEBUG
+
 } // namespace symbol
 } // namespace cci
 

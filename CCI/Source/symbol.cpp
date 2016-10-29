@@ -123,33 +123,6 @@ bool Initialize()
 
 void Finalize()
 {
-    for (int i = 0; i < kHashTableSize; ++i)
-    {
-        if (hash_table[i] == nullptr || hash_table[i]->data_ == nullptr) continue;
-        
-        SymbolDataLinkItem* p = hash_table[i];
-        while(p != nullptr)
-        {
-            std::cout << i << ": ";
-
-            if (p->data_->kind_ == kVar)
-            {
-                std::cout << "Var - ";
-            }
-            else 
-            {
-                std::cout << "Function";
-                if (p->data_->args_ > 0)
-                {
-                    std::cout << " (args: " << static_cast<int>(p->data_->args_) << ")";
-                }
-                std::cout << " - ";
-            }
-            std::cout << p->data_->name_ << std::endl;
-            p = p->next_;
-        }
-    }
-
     for (int i = 0; i < symbol_pointer_array_index; ++i)
     {
         if (symbol_pointer_array[i] != nullptr)
@@ -231,6 +204,40 @@ void CloseLocalSymbol(const SymbolData* data)
     //symbol_pointer_array_index = start_local_symbol - 1 + data->args_;
     //start_local_symbol = kEmptyLocalSymbol;
 }
+
+#ifdef _DEBUG
+
+void DumpTable()
+{
+    for (int i = 0; i < kHashTableSize; ++i)
+    {
+        if (hash_table[i] == nullptr || hash_table[i]->data_ == nullptr) continue;
+        
+        SymbolDataLinkItem* p = hash_table[i];
+        while(p != nullptr)
+        {
+            std::cout << i << ": ";
+
+            if (p->data_->kind_ == kVar)
+            {
+                std::cout << "Var - ";
+            }
+            else 
+            {
+                std::cout << "Function";
+                if (p->data_->args_ > 0)
+                {
+                    std::cout << " (args: " << static_cast<int>(p->data_->args_) << ")";
+                }
+                std::cout << " - ";
+            }
+            std::cout << p->data_->name_ << std::endl;
+            p = p->next_;
+        }
+    }
+}
+
+#endif // _DEBUG
 
 } // namespace symbol
 } // namespace cci
