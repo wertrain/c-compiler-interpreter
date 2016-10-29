@@ -89,6 +89,9 @@ Keyword keyword_table[] =
     {";", kSemicolon},
     {":", kColon},
     {",", kComma},
+    {"printf", kPrintf},
+    {"input", kInput},
+    {"exit", kExit},
     {"", kSentinel},
 };
 

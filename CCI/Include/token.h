@@ -47,9 +47,11 @@ enum TokenKind
     kDecrease,          // --
     kIf,                // if
     kElse,              // else
-    kPuts,              // puts
-    kInt,               // int
-    kVoid,              // void
+    kPrintf,            // 組み込み関数: フォーマット文字列を出力する
+    kInput,             // 組み込み関数: 入力を受け付ける
+    kExit,              // 組み込み関数: プログラムを終了する
+    kInt,               // 型: int
+    kVoid,              // 型: void
     kNull,              // NULL
     kIntNum,            // (数値定数)
     kString,            // (文字列定数)
