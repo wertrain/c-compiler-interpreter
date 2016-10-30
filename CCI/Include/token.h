@@ -47,6 +47,7 @@ enum TokenKind
     kDecrease,          // --
     kIf,                // if
     kElse,              // else
+    kReturn,            // return
     kPrintf,            // 組み込み関数: フォーマット文字列を出力する
     kInput,             // 組み込み関数: 入力を受け付ける
     kExit,              // 組み込み関数: プログラムを終了する

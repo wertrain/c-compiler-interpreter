@@ -26,7 +26,6 @@ static int kMaxPriority = 8;
  */
 cci::token::TokenKind last_statement_token_kind = cci::token::kNon;
 
-
 /**
  * 局所変数アドレス管理
  */
@@ -210,11 +209,11 @@ bool EntryFunction(cci::token::Token &token, const cci::symbol::SymbolDataType t
         return false;
     }
 
-    cci::symbol::SymbolData* tmpSymbolData = cci::symbol::CreateSymbolData(token.text_);
-    tmpSymbolData->kind_ = cci::symbol::kFunction; // 関数として追加
-    tmpSymbolData->dataType_ = type;
-    tmpSymbolData->level_ = block_nest_count;
-    cci::symbol::Enter(tmpSymbolData);
+    cci::symbol::SymbolData* funcSymbolData = cci::symbol::CreateSymbolData(token.text_);
+    funcSymbolData->kind_ = cci::symbol::kFunction; // 関数として追加
+    funcSymbolData->dataType_ = type;
+    funcSymbolData->level_ = block_nest_count;
+    cci::symbol::Enter(funcSymbolData);
 
     if (!GetNextTokenInner(token) || token.kind_ != '(' || // '(' == cci::token::kLeftParenthesis
         !GetNextTokenInner(token)) 
@@ -229,6 +228,10 @@ bool EntryFunction(cci::token::Token &token, const cci::symbol::SymbolDataType t
         GetNextTokenInner(token);
         break;
     case ')': // ')' == cci::token::kRightParenthesis
+        if (!GetNextTokenInner(token)) 
+        {
+            return false;
+        }
         break;
     default:
         // 関数引数の登録
@@ -250,7 +253,7 @@ bool EntryFunction(cci::token::Token &token, const cci::symbol::SymbolDataType t
             paramSymbolData->dataType_ = type;
             paramSymbolData->level_ = block_nest_count;
 
-            ++(tmpSymbolData->args_);
+            ++(funcSymbolData->args_);
 
             if (!GetNextTokenInner(token)) 
             {
@@ -271,11 +274,41 @@ bool EntryFunction(cci::token::Token &token, const cci::symbol::SymbolDataType t
         {
             return false;
         }
-        
+        // 宣言だけならプロトタイプに変更
         if (token.kind_ == ';') // cci::token::kSemicolon
         {
-            tmpSymbolData->kind_ = cci::symbol::kPrototype;
+            funcSymbolData->kind_ = cci::symbol::kPrototype;
         }
+    }
+    cci::symbol::CloseLocalSymbol(funcSymbolData);
+
+    switch (token.kind_)
+    {
+    case cci::token::kVoid:
+        GetNextTokenInner(token);
+        break;
+    case '{': // '{' == cci::token::kLeftCurlyBracket
+        // 関数処理開始
+        cci::code::GenerateCode2(cci::code::kAdbr, 0);
+        cci::code::GenerateCode3(cci::code::kSto, cci::code::kLocalFlag, 0);
+        for (int i = 0; i < funcSymbolData->args_; ++i)
+        {
+            const int index = funcSymbolData->args_ - i;
+            cci::code::GenerateCode3(cci::code::kSto, cci::code::kLocalFlag, (funcSymbolData + i)->address_);
+        }
+        // 関数内ブロック処理開始
+        block(token, true);
+        // 関数処理終了
+        cci::code::BackPatch(funcSymbolData->address_, -local_var_address);
+        if (last_statement_token_kind != cci::token::kReturn)
+        {
+            //
+        }
+        cci::code::BackPatchReturnCode(funcSymbolData->address_);
+        cci::code::GenerateCode3(cci::code::kLod, cci::code::kLocalFlag, 0);
+        cci::code::GenerateCode2(cci::code::kAdbr, local_var_address);
+        cci::code::GenerateCode1(cci::code::kRet);
+        break;
     }
 
     return true;
@@ -581,7 +614,12 @@ void block(cci::token::Token &token, const bool is_function)
         cci::symbol::SymbolDataType type = GetSymbolDataType(token.kind_);
         while (type != cci::symbol::kNon)
         {
+            if (!GetNextTokenInner(token))
+            {
+                return;
+            }
             EntryVars(token, type);
+            type = GetSymbolDataType(token.kind_);
         }
     }
 
@@ -634,7 +672,8 @@ int compile(const char* name, const char* text, const int text_size)
         }
     }
 
-    cci::symbol::DumpTable();
+    //cci::symbol::DumpTable();
+    cci::code::DumpCodes();
 
     cci::token::Finalize();
     cci::code::Finalize();

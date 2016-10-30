@@ -71,6 +71,7 @@ Keyword keyword_table[] =
 {
     {"if", kIf},
     {"else", kElse},
+    {"return", kReturn},
     {"int", kInt},
     {"void", kVoid},
     {"(", kLeftParenthesis},
@@ -89,6 +90,8 @@ Keyword keyword_table[] =
     {";", kSemicolon},
     {":", kColon},
     {",", kComma},
+    {"{", kLeftCurlyBracket},
+    {"}", kRightCurlyBracket},
     {"printf", kPrintf},
     {"input", kInput},
     {"exit", kExit},

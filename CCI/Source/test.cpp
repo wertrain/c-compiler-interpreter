@@ -138,27 +138,28 @@ bool TestParser()
         },
         {
             {
+                "int func()\n\
+                {\n\
+                int dt;\n\
+                dt = 0;\n\
+                }\n"
+            },
+            {
                 "int dt;\n\
                 dt = 100;\n"
             },
             {
-                "int func();\n\
-                func();\n"
-            },
-            {
-                "int dt, dt2;\n\
-                dt2 = 100;\n"
-            },
-            {
-                "int dt, [4];\n\
+                "int dt;\n\
                 dt = 100;\n"
             },
             {
-                "int func1(){\n\
-                }\n\
-                int func2(int args){\n\
-                }\n"
-            }
+                "int dt;\n\
+                dt = 100;\n"
+            },
+            {
+                "int dt;\n\
+                dt = 100;\n"
+            },
         }
     };
     const int test_pattern = 1;

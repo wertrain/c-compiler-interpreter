@@ -15,6 +15,17 @@ const int kMaxCodeSize = 1024 * 16;
 const int kError = -1;
 
 /**
+ * ローカルを表すフラグ
+ * GenerateCode で使用する
+ */
+const int kLocalFlag = 1;
+
+/**
+ * return 処理用未定番地
+ */
+const int kNoFixReturnAddress = -102;
+
+/**
  * 処理コード
  */
 enum OparationCode
@@ -69,6 +80,20 @@ void GenerateCodeBinary(const int kind);
  * @param kind トークン種類
  */
 void GenerateCodeUnArray(const int kind);
+
+/**
+ * コードの未定データを後処理
+ * @param index 位置
+ * @param address アドレス
+ */
+void BackPatch(const int index, const int address);
+
+/**
+ * kRet 関連 kJmp 未定番地処理
+ * @param index 位置
+ * @param address アドレス
+ */
+void BackPatchReturnCode(const int address);
 
 /**
  * 左辺値にする

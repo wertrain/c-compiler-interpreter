@@ -52,6 +52,15 @@ int GenerateCode(const cci::code::OparationCode opcode, const int flag, const in
     return codedata_count;
 }
 
+bool IsCode(const int index, const cci::code::OparationCode opcode, const int data)
+{
+    if (index < 0 || index >= cci::code::kMaxCodeSize)
+    {
+        return false;
+    }
+    return codedata_array[index].opcode_ == opcode && codedata_array[index].data_ == data;
+}
+
 } // namespace
 
 namespace cci {
@@ -117,6 +126,41 @@ void GenerateCodeUnArray(const int kind)
     case cci::token::kDecrease:  code = kDec;    break;
     }
     GenerateCode1(code);
+}
+
+void BackPatch(const int index, const int address)
+{
+    if (index < 0 || index >= kMaxCodeSize)
+    {
+        return;
+    }
+    codedata_array[index].data_ = address;
+}
+
+void BackPatchReturnCode(const int address)
+{
+    // 直前が kRet 関連 kJmp なら不要なので削除
+    for (int i = 0; i < codedata_count; ++i)
+    {
+        const int index = codedata_count - i;
+        if (IsCode(index, kJmp, kNoFixReturnAddress))
+        {
+            --codedata_count;
+        }
+        else
+        {
+            break;
+        }
+    }
+    // 未定番地なら次番地を設定
+    for (int i = 0; i < codedata_count; ++i)
+    {
+        const int index = codedata_count - i;
+        if (IsCode(index, kJmp, kNoFixReturnAddress))
+        {
+            codedata_array[index].data_ = codedata_count + 1;
+        }
+    }
 }
 
 bool ToLeftValue()
