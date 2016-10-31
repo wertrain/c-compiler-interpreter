@@ -165,13 +165,14 @@ void BackPatchReturnCode(const int address)
 
 bool ToLeftValue()
 {
-    switch(codedata_array[codedata_count].opcode_)
+    const int index = codedata_count - 1;
+    switch(codedata_array[index].opcode_)
     {
     case kVal: 
        --codedata_count;
        break;
     case kLod:
-        codedata_array[codedata_count - 1].opcode_ = kLda;
+        codedata_array[index].opcode_ = kLda;
         break;
     // ïsê≥Ç»ç∂ï”íl
     default:
@@ -206,10 +207,9 @@ void DumpCodes()
 {
     for (int i = 0; i < codedata_count; ++i)
     {
-        int index = codedata_count - i - 1;
-        std::cout << "[" << kOparationCodeText[codedata_array[index].opcode_] << "]" << " - ";
-        std::cout << codedata_array[index].flag_ << " - ";;
-        std::cout << codedata_array[index].data_;
+        std::cout << "[" << kOparationCodeText[codedata_array[i].opcode_] << "]" << " - ";
+        std::cout << codedata_array[i].flag_ << " - ";;
+        std::cout << codedata_array[i].data_;
         std::cout << std::endl;
     }
 }
