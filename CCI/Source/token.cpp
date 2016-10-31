@@ -339,7 +339,8 @@ bool GetNextToken(Token& token)
     default:
         *token_text_pointer++ = ch;
         ch = NextChar();
-        if (IsOperator2(*(token_text_pointer-1), ch))
+        // 取得した文字が半角スペースなら、そもそも判定不要
+        if (ch != ' ' && IsOperator2(*(token_text_pointer-1), ch))
         {
             *token_text_pointer++ = ch;
             ch = NextChar();

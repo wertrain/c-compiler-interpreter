@@ -295,6 +295,7 @@ bool EntryFunction(cci::token::Token &token, const cci::symbol::SymbolDataType t
             {
                 Notice(cci::notice::kErrorInvalidMainFunction);
             }
+            cci::code::BackPatch(0, funcSymbolData->address_);
         }
         // ŠÖ”ˆ—ŠJn
         cci::code::GenerateCode2(cci::code::kAdbr, 0);

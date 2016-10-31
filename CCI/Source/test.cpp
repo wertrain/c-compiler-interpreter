@@ -141,24 +141,36 @@ bool TestParser()
                 "int func()\n\
                 {\n\
                 int dt;\n\
-                dt = 0;\n\
+                dt = 40 + 50;\n\
                 }\n"
             },
             {
-                "int dt;\n\
-                dt = 100;\n"
+                "int func()\n\
+                {\n\
+                int dt;\n\
+                dt = 45;\n\
+                }\n"
             },
             {
-                "int dt;\n\
-                dt = 100;\n"
+                "int func()\n\
+                {\n\
+                int dt;\n\
+                dt = 60;\n\
+                }\n"
             },
             {
-                "int dt;\n\
-                dt = 100;\n"
+                "int func()\n\
+                {\n\
+                int dt;\n\
+                dt = 70;\n\
+                }\n"
             },
             {
-                "int dt;\n\
-                dt = 100;\n"
+                "int func()\n\
+                {\n\
+                int dt;\n\
+                dt = 80;\n\
+                }\n"
             },
         }
     };

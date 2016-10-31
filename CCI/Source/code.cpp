@@ -142,7 +142,7 @@ void BackPatchReturnCode(const int address)
     // 直前が kRet 関連 kJmp なら不要なので削除
     for (int i = 0; i < codedata_count; ++i)
     {
-        const int index = codedata_count - i;
+        const int index = codedata_count - i - 1;
         if (IsCode(index, kJmp, kNoFixReturnAddress))
         {
             --codedata_count;
@@ -155,7 +155,7 @@ void BackPatchReturnCode(const int address)
     // 未定番地なら次番地を設定
     for (int i = 0; i < codedata_count; ++i)
     {
-        const int index = codedata_count - i;
+        const int index = codedata_count - i - 1;
         if (IsCode(index, kJmp, kNoFixReturnAddress))
         {
             codedata_array[index].data_ = codedata_count + 1;
@@ -206,7 +206,7 @@ void DumpCodes()
 {
     for (int i = 0; i < codedata_count; ++i)
     {
-        int index = codedata_count - i;
+        int index = codedata_count - i - 1;
         std::cout << "[" << kOparationCodeText[codedata_array[index].opcode_] << "]" << " - ";
         std::cout << codedata_array[index].flag_ << " - ";;
         std::cout << codedata_array[index].data_;
