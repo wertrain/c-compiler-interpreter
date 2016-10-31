@@ -288,6 +288,14 @@ bool EntryFunction(cci::token::Token &token, const cci::symbol::SymbolDataType t
         GetNextTokenInner(token);
         break;
     case '{': // '{' == cci::token::kLeftCurlyBracket
+        // main 関数かチェック
+        if (strcmp("main", funcSymbolData->name_) == 0)
+        {
+            if (funcSymbolData->dataType_ != cci::symbol::kInteger || funcSymbolData->args_ != 0)
+            {
+                Notice(cci::notice::kErrorInvalidMainFunction);
+            }
+        }
         // 関数処理開始
         cci::code::GenerateCode2(cci::code::kAdbr, 0);
         cci::code::GenerateCode3(cci::code::kSto, cci::code::kLocalFlag, 0);
