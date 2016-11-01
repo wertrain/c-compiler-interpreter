@@ -208,7 +208,7 @@ void DumpCodes()
     for (int i = 0; i < codedata_count; ++i)
     {
         std::cout << "[" << kOparationCodeText[codedata_array[i].opcode_] << "]" << " - ";
-        std::cout << codedata_array[i].flag_ == 0 ? "false" : "true" << " : ";
+        std::cout << (codedata_array[i].flag_ == 0 ? "false" : "true") << " : ";
         std::cout << codedata_array[i].data_;
         std::cout << std::endl;
     }
