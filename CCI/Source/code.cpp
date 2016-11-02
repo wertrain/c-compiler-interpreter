@@ -194,6 +194,11 @@ void RemoveValue()
     }
 }
 
+int execute()
+{
+    return 0;
+}
+
 #ifdef _DEBUG
 
 static const char* kOparationCodeText[] =

@@ -106,6 +106,11 @@ bool ToLeftValue();
  */
 void RemoveValue();
 
+/**
+ * コードを実行する
+ */
+int execute();
+
 #ifdef _DEBUG
 
 /**
