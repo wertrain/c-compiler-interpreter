@@ -196,6 +196,20 @@ void RemoveValue()
 
 int execute()
 {
+    int pc = 0;
+
+    while (1)
+    {
+        OparationCode opcode = codedata_array[pc].opcode_;
+        int opdata = codedata_array[pc].data_;
+
+        switch (opcode)
+        {
+        case kNop:
+            break;
+        default:
+        }
+    }
     return 0;
 }
 
