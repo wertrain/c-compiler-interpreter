@@ -207,7 +207,6 @@ int execute()
         {
         case kNop:
             break;
-        default:
         }
     }
     return 0;

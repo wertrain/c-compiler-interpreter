@@ -9,6 +9,9 @@ namespace symbol {
  */
 const int kMaxSymbol = 1024;
 
+/**
+ * シンボルの種類
+ */
 enum SymbolKind
 {
     kNumber = 0,
@@ -18,6 +21,9 @@ enum SymbolKind
     kParam
 };
 
+/**
+ * シンボルのデータタイプ
+ */
 enum SymbolDataType
 {
     kNon = 0,
@@ -25,6 +31,9 @@ enum SymbolDataType
     kInteger,
 };
 
+/**
+ * シンボルデータ構造体
+ */
 struct SymbolData
 {
     char* name_;        /** 変数や関数の名前 */
@@ -36,8 +45,20 @@ struct SymbolData
     int address_;       /** 変数のアドレス */
 };
 
+/**
+ * 指定された名前でシンボルデータを作成
+ * 返り値であるシンボルデータ構造体のポインタは
+ * Finalize 時に削除されるので delete 等は不要
+ * @param name 追加するシンボルの名前
+ * @return シンボルデータのポインタ
+ */
 SymbolData* CreateSymbolData(const char* name);
 
+/**
+ * シンボルを登録
+ * @param data 登録するデータ
+ * @return 登録に成功したか
+ */
 bool Enter(const SymbolData *data);
 
 /**
