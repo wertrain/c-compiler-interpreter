@@ -10,6 +10,7 @@ bool TestSymbol();
 bool TestToken();
 bool TestParser();
 bool TestCode();
+bool TestExcute();
 
 } // namespace test
 } // namespace cci

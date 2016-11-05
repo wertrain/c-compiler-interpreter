@@ -203,5 +203,10 @@ bool TestCode()
     return true;
 }
 
+bool TestExcute()
+{
+    return true;
+}
+
 } // namespace test
 } // namespace cci
