@@ -24,6 +24,22 @@ struct CodeData
 static CodeData codedata_array[cci::code::kMaxCodeSize];
 static int codedata_count = 0;
 
+static const int kIntSize = sizeof(int);
+
+/**
+ * スタック管理
+ */
+static const int kMaxStackSize = 128;
+static const int kStackBottom = 0;
+static int stack_array[kMaxStackSize + 1];
+
+/**
+ * メモリ管理
+ */
+static const int kMaxMemorySize = 0xffff;
+static char memory_array[kMaxMemorySize + 1];
+static int gloval_address = 1 * kIntSize;
+
 void ResetInner()
 {
     codedata_count = 0;
