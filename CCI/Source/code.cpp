@@ -50,6 +50,9 @@ void ResetInner()
         codedata_array[i].data_ = 0;
         codedata_array[i].reserved_ = 0;
     }
+    memset(stack_array, 0, sizeof(stack_array));
+    memset(memory_array, 0, sizeof(memory_array));
+    gloval_address = 1 * kIntSize;
 }
 
 int GenerateCode(const cci::code::OparationCode opcode, const int flag, const int data)
