@@ -41,6 +41,8 @@ static const int kMaxMemorySize = 0xffff;
 static char memory_array[kMaxMemorySize + 1];
 static int gloval_address = 1 * kIntSize;
 
+static int base_register = 0;
+
 void ResetInner()
 {
     codedata_count = 0;
@@ -54,6 +56,8 @@ void ResetInner()
     memset(stack_array, 0, sizeof(stack_array));
     memset(memory_array, 0, sizeof(memory_array));
     gloval_address = 1 * kIntSize;
+
+    base_register = 0;
 }
 
 int GenerateCode(const cci::code::OparationCode opcode, const int flag, const int data)
@@ -79,6 +83,23 @@ bool IsCode(const int index, const cci::code::OparationCode opcode, const int da
         return false;
     }
     return codedata_array[index].opcode_ == opcode && codedata_array[index].data_ == data;
+}
+
+int ToIntMemory(const int address)
+{
+    return (*(int*)(memory_array + address));
+}
+
+void Assign(const int address, const int data)
+{
+    int memory = ToIntMemory(address);
+    memory = data;
+}
+
+void Addition(const int address, const int data)
+{
+    int memory = ToIntMemory(address);
+    memory += data;
 }
 
 } // namespace
@@ -216,6 +237,7 @@ void RemoveValue()
 
 int execute()
 {
+    const int kStartLocalMemory = ToIntMemory(0);
     int pc = 0;
     int stackTop = 0;
 
@@ -223,6 +245,7 @@ int execute()
     {
         OparationCode opcode = codedata_array[pc].opcode_;
         int opdata = codedata_array[pc].data_;
+        const int address = (codedata_array[pc].flag_ & 0x01) ? base_register + opdata : opdata;
 
         if (stackTop > kMaxStackSize)
         {
@@ -237,8 +260,102 @@ int execute()
 
         switch (opcode)
         {
-        case kNop:
+        case kDel:
+            --stackTop;
             break;
+        case kStop:
+            if (stackTop > 0)
+            {
+                //pop
+            }
+            else
+            {
+                return 0;
+            }
+            break;
+        case kJmp:
+            pc = opdata;
+            break;
+        case kJpt:
+            if (stack_array[stackTop--])
+            {
+                pc = opdata;
+            }
+            break;
+        case kJpf:
+            if (!stack_array[stackTop--])
+            {
+                pc = opdata;
+            }
+            break;
+        case kLib:
+            break;
+        case kLod:
+             stack_array[++stackTop] = ToIntMemory(address);
+             break;
+        case kLda:
+            stack_array[++stackTop] = address;
+            break;
+        case kLdi:
+            stack_array[++stackTop] = opdata;
+            break;
+        case kSto:
+            Assign(address, stack_array[stackTop]);
+            --stackTop;
+            break;
+        case kAdbr:
+            base_register += opdata;
+            if (base_register < kStartLocalMemory)
+            {
+                cci::notice::AddNotice(cci::notice::kInternalErrorStackMemoryOver);
+                return 0;
+            }
+            break;
+        case kNop:
+            ++pc;
+            break;
+        case kAss:
+            Assign(stack_array[stackTop - 1], stack_array[stackTop]);
+            stackTop -= 2;
+            break;
+        case kAssv:
+            Assign(stack_array[stackTop - 1], stack_array[stackTop]);
+            stack_array[stackTop - 1] = stack_array[stackTop];
+            --stackTop;
+            break;
+        case kVal:
+            stack_array[stackTop] = ToIntMemory(stack_array[stackTop]);
+            break;
+        case kEqcmp:
+            if (opdata == stack_array[stackTop])
+            {
+                stack_array[stackTop] = 1;
+            }
+            else
+            {
+                stack_array[++stackTop] = 0;
+            }
+            break;
+        case kCall:
+            stack_array[++stackTop] = pc;
+            pc = opdata;
+            break;
+        case kRet:
+            pc = stack_array[stackTop--];
+            break;
+        case kInc:
+            Addition(stack_array[stackTop], +1);
+            stack_array[stackTop] = ToIntMemory(stack_array[stackTop]);
+            break;
+        case kDec:
+            Addition(stack_array[stackTop], -1);
+            stack_array[stackTop] = ToIntMemory(stack_array[stackTop]);
+            break;
+        case kNot:
+            break;
+        default:
+            cci::notice::AddNotice(cci::notice::kInternalErrorInvalidCommand);
+            return 0;
         }
     }
     return 0;

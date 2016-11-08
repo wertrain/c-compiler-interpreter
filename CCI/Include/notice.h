@@ -42,6 +42,8 @@ enum NoticeMessageId
     kInternalErrorNotEnoughMemory,
     kInternalErrorStackOverflow,
     kInternalErrorStackUnderflow,
+    kInternalErrorStackMemoryOver,
+    kInternalErrorInvalidCommand,
     kErrorUnknown
 };
  
@@ -65,7 +67,11 @@ static const char* kNoticeMessageList[] =
     "この名前は既に使用させれている.",
     "main関数の書式が不正.",
     "コードが格納できる最大サイズを超えた.",
-    "メモリが不足している",
+    "メモリが不足している.",
+    "スタックオーバーフロー.",
+    "スタックアンダーフロー.",
+    "スタックメモリーオーバー.",
+    "無効な命令.",
     "不明なエラー."
 };
 
