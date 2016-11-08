@@ -237,12 +237,9 @@ void RemoveValue()
 
 int Execute()
 {
-    int kStartLocalMemory = ToIntMemory(0);
+    const int kStartLocalMemory = ToIntMemory(0);
     int pc = 0;
     int stackTop = 0;
-
-    kStartLocalMemory = 100;
-    std::cout << memory_array[0] << std::endl;
 
     while (1)
     {
