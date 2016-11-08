@@ -109,7 +109,7 @@ void RemoveValue();
 /**
  * コードを実行する
  */
-int execute();
+int Execute();
 
 #ifdef _DEBUG
 

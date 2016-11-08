@@ -205,6 +205,60 @@ bool TestCode()
 
 bool TestExcute()
 {
+    const int sample_text_num = 5;
+    const char* sample_text[sample_text_num] = 
+    {
+        {
+            "int func()\n\
+            {\n\
+            int dt;\n\
+            dt = 40 + 50;\n\
+            }\n"
+        },
+        {
+            "int func()\n\
+            {\n\
+            int dt;\n\
+            dt = 45;\n\
+            }\n"
+        },
+        {
+            "int func()\n\
+            {\n\
+            int dt;\n\
+            dt = 60;\n\
+            }\n"
+        },
+        {
+            "int func()\n\
+            {\n\
+            int dt;\n\
+            dt = 70;\n\
+            }\n"
+        },
+        {
+            "int func()\n\
+            {\n\
+            int dt;\n\
+            dt = 80;\n\
+            }\n"
+        },
+    };
+        for (int i = 0; i < sample_text_num; ++i)
+    {
+        std::cout << "========================" << std::endl;
+        std::cout << "sample_text_" << i << ":" << std::endl;
+        cci::parser::compile("sample_text", sample_text[i], strlen(sample_text[i]));
+
+        if (cci::notice::GetNoticeAmountCount() > 0)
+        {
+            cci::notice::PrintNotice();
+        }
+        else
+        {
+            cci::code::Execute();
+        }
+    }
     return true;
 }
 
