@@ -2,6 +2,7 @@
 
 #include "../include/notice.h"
 #include "../include/token.h"
+#include "../include/notice.h"
 
 #ifdef _DEBUG
 #include <iostream>
@@ -216,11 +217,23 @@ void RemoveValue()
 int execute()
 {
     int pc = 0;
+    int stackTop = 0;
 
     while (1)
     {
         OparationCode opcode = codedata_array[pc].opcode_;
         int opdata = codedata_array[pc].data_;
+
+        if (stackTop > kMaxStackSize)
+        {
+            cci::notice::AddNotice(cci::notice::kInternalErrorStackOverflow);
+            return 0;
+        }
+        else if (stackTop < kStackBottom)
+        {
+            cci::notice::AddNotice(cci::notice::kInternalErrorStackUnderflow);
+            return 0;
+        }
 
         switch (opcode)
         {

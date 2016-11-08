@@ -40,6 +40,8 @@ enum NoticeMessageId
     kErrorInvalidMainFunction,
     kInternalErrorOverflowCodeData,
     kInternalErrorNotEnoughMemory,
+    kInternalErrorStackOverflow,
+    kInternalErrorStackUnderflow,
     kErrorUnknown
 };
  
