@@ -118,6 +118,11 @@ int Execute();
  */
 void DumpCodes();
 
+/**
+ * ƒƒ‚ƒŠ“à—e‚ğƒ_ƒ“ƒv‚·‚é
+ */
+void DumpMemory();
+
 #endif // _DEBUG
 
 } // namespace code

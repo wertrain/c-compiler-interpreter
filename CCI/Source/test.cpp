@@ -205,7 +205,7 @@ bool TestCode()
 
 bool TestExcute()
 {
-    const int sample_text_num = 5;
+    const int sample_text_num = 1;
     const char* sample_text[sample_text_num] = 
     {
         {
@@ -214,35 +214,7 @@ bool TestExcute()
             int dt;\n\
             dt = 40 + 50;\n\
             }\n"
-        },
-        {
-            "int func()\n\
-            {\n\
-            int dt;\n\
-            dt = 45;\n\
-            }\n"
-        },
-        {
-            "int func()\n\
-            {\n\
-            int dt;\n\
-            dt = 60;\n\
-            }\n"
-        },
-        {
-            "int func()\n\
-            {\n\
-            int dt;\n\
-            dt = 70;\n\
-            }\n"
-        },
-        {
-            "int func()\n\
-            {\n\
-            int dt;\n\
-            dt = 80;\n\
-            }\n"
-        },
+        }
     };
         for (int i = 0; i < sample_text_num; ++i)
     {
@@ -257,6 +229,8 @@ bool TestExcute()
         else
         {
             cci::code::Execute();
+            cci::code::DumpMemory();
+            cci::notice::PrintNotice();
         }
     }
     return true;

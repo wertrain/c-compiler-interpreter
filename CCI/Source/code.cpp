@@ -85,20 +85,15 @@ bool IsCode(const int index, const cci::code::OparationCode opcode, const int da
     return codedata_array[index].opcode_ == opcode && codedata_array[index].data_ == data;
 }
 
-int ToIntMemory(const int address)
-{
-    return (*(int*)(memory_array + address));
-}
-
 void Assign(const int address, const int data)
 {
-    int memory = ToIntMemory(address);
+    int memory = (*(int*)(memory_array + address));
     memory = data;
 }
 
 void Addition(const int address, const int data)
 {
-    int memory = ToIntMemory(address);
+    int memory = (*(int*)(memory_array + address));
     memory += data;
 }
 
@@ -237,7 +232,7 @@ void RemoveValue()
 
 int Execute()
 {
-    const int kStartLocalMemory = ToIntMemory(0);
+    int kStartLocalMemory = (*(int*)(memory_array + 0));
     int pc = 0;
     int stackTop = 0;
 
@@ -246,6 +241,7 @@ int Execute()
         OparationCode opcode = codedata_array[pc].opcode_;
         int opdata = codedata_array[pc].data_;
         const int address = (codedata_array[pc].flag_ & 0x01) ? base_register + opdata : opdata;
+        ++pc;
 
         if (stackTop > kMaxStackSize)
         {
@@ -266,7 +262,7 @@ int Execute()
         case kStop:
             if (stackTop > 0)
             {
-                //pop
+                --stackTop; // pop
             }
             else
             {
@@ -291,7 +287,7 @@ int Execute()
         case kLib:
             break;
         case kLod:
-             stack_array[++stackTop] = ToIntMemory(address);
+             stack_array[++stackTop] = (*(int*)(memory_array + address));
              break;
         case kLda:
             stack_array[++stackTop] = address;
@@ -324,7 +320,7 @@ int Execute()
             --stackTop;
             break;
         case kVal:
-            stack_array[stackTop] = ToIntMemory(stack_array[stackTop]);
+            stack_array[stackTop] = (*(int*)(memory_array + stack_array[stackTop]));
             break;
         case kEqcmp:
             if (opdata == stack_array[stackTop])
@@ -345,11 +341,11 @@ int Execute()
             break;
         case kInc:
             Addition(stack_array[stackTop], +1);
-            stack_array[stackTop] = ToIntMemory(stack_array[stackTop]);
+            stack_array[stackTop] = (*(int*)(memory_array + stack_array[stackTop]));
             break;
         case kDec:
             Addition(stack_array[stackTop], -1);
-            stack_array[stackTop] = ToIntMemory(stack_array[stackTop]);
+            stack_array[stackTop] = (*(int*)(memory_array + stack_array[stackTop]));
             break;
         case kNot:
             break;
@@ -378,6 +374,21 @@ void DumpCodes()
         std::cout << (codedata_array[i].flag_ == 0 ? "false" : "true") << " : ";
         std::cout << codedata_array[i].data_;
         std::cout << std::endl;
+    }
+}
+
+void DumpMemory()
+{
+    std::cout << "Dump memory -" << std::endl;
+    for (int i = 0; i < 16; ++i)
+    {
+        std::cout << i << ": " << static_cast<int>(memory_array[i]) << std::endl;
+    }
+
+    std::cout << "Dump stack -" << std::endl;
+    for (int i = 0; i < 16; ++i)
+    {
+        std::cout << i << ": " << stack_array[i] << std::endl;
     }
 }
 
