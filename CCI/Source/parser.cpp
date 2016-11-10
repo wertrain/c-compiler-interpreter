@@ -543,7 +543,7 @@ void Term(cci::token::Token &token, const int priority)
 void Expression(cci::token::Token &token)
 {
     Term(token, kMinPriority + 2);
-    if (token.kind_ == '=') // '{' == cci::token::kAssignment
+    if (token.kind_ == '=') // '=' == cci::token::kAssignment
     {
         cci::code::ToLeftValue();
         GetNextTokenInner(token);
